@@ -17,8 +17,9 @@ public partial class GiveawayEventListPage : ContentPage
         await viewModel.LoadAsync();
     }
 
-    private void ListView_ItemTapped(object sender, ItemTappedEventArgs e)
+    private async void ListView_ItemTapped(object sender, ItemTappedEventArgs e)
     {
-        
+        var args = (GiveawayEvent)e.Item;
+        await Shell.Current.GoToAsync($"GiveawayEventDetailPage?eventIndex={args.EventIndex}");
     }
 }

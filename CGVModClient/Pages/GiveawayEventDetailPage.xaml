@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:cgv="clr-namespace:CGVModClient"
+             xmlns:cgv_viewmodels="clr-namespace:CGVModClient.ViewModels"
+             xmlns:cgv_data="clr-namespace:CGVModClient.Data"
+             x:Class="CGVModClient.Pages.GiveawayEventDetailPage"
+             x:DataType="cgv_viewmodels:GiveawayEventDetailViewModel"
+             Loaded="ContentPage_Loaded">
+    <ContentPage.Resources>
+        <Style x:Key="GiveawayEventNameLabel" TargetType="Label">
+            <Setter Property="FontSize" Value="14"/>
+        </Style>
+        <Style x:Key="GiveawayEventPeriodLabel" TargetType="Label">
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="TextColor" Value="LightGrey"/>
+        </Style>
+    </ContentPage.Resources>
+    <Grid RowDefinitions="40,*">
+        <Border Grid.Row="0"
+                Style="{StaticResource MyBorder}"
+                StrokeThickness="0.5"
+                Padding="7"
+                Margin="-2,0,-2,0">
+            <Label Text="{Binding Title}"
+               VerticalOptions="Center" 
+               HorizontalOptions="Start"
+               Margin="0,0,20,0"/>
+        </Border>
+        <ListView Grid.Row="1"
+                  ItemsSource="{Binding TheaterInfo.TheaterList}"
+                  SelectionMode="None">
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="cgv_data:GiveawayTheaterInfo+Theater">
+                    <ViewCell>
+                        <Grid RowDefinitions="1*,1*"
+                              HeightRequest="60"
+                              VerticalOptions="Center"
+                              HorizontalOptions="StartAndExpand"
+                              Margin="5">
+                            <Label Text="{Binding TheaterName}" Grid.Row="0"
+                                   Style="{StaticResource GiveawayEventNameLabel}"
+                                   VerticalOptions="End"/>
+                            <Label Text="{Binding GiveawayRemainCount}" Grid.Row="1"
+                                   Style="{StaticResource GiveawayEventPeriodLabel}"
+                                   VerticalOptions="Start"/>
+                        </Grid>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </Grid>
+</ContentPage>
