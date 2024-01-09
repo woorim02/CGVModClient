@@ -8,6 +8,9 @@
              x:DataType="cgv_viewmodels:GiveawayEventDetailViewModel"
              Loaded="ContentPage_Loaded">
     <ContentPage.Resources>
+        <Style x:Key="MyBorder" TargetType="Border">
+            <Setter Property="Stroke" Value="LightGray"></Setter>
+        </Style>
         <Style x:Key="GiveawayEventNameLabel" TargetType="Label">
             <Setter Property="FontSize" Value="14"/>
         </Style>
