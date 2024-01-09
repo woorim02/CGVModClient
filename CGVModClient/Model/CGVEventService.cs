@@ -13,10 +13,10 @@ namespace CGVModClient.Model;
 
 public class CGVEventService
 {
-    private HttpClient client;
-    private Aes aes;
+    private static readonly HttpClient client;
+    private static Aes aes;
 
-    public CGVEventService()
+    static CGVEventService()
     {
         client = new HttpClient();
         client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0;) Chrome/120.0.0.0 Safari/537.36");
@@ -28,6 +28,8 @@ public class CGVEventService
         aes.IV = Convert.FromBase64String("YjUxMWM3MWI5M2E3NDhmNA==");
         aes.Key = Convert.FromBase64String("YjUxMWM3MWI5M2E3NDhmNDc1YzM5YzY1ZGQwZTFlOTQ=");
     }
+
+    public CGVEventService() { }
 
     public async Task<GiveawayEvent[]> GetGiveawayEventsAsync()
     {
@@ -102,7 +104,7 @@ public class CGVEventService
     public async Task<GiveawayTheaterInfo> GetGiveawayTheaterInfoAsync(GiveawayEventModel model, int areaCode = 13)
         => await GetGiveawayTheaterInfoAsync(model.GiveawayIndex, areaCode);
 
-    private string Decrypt(string data)
+    private static string Decrypt(string data)
     {
         var bit = Convert.FromBase64String(data);
         var decryptResult = aes.DecryptCbc(bit, aes.IV);
