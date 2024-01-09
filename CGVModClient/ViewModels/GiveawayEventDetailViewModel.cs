@@ -36,10 +36,13 @@ public class GiveawayEventDetailViewModel : INotifyPropertyChanged
     public async Task LoadAsync(string eventIndex)
     {
         EventModel = await eventService.GetGiveawayEventModelAsync(eventIndex);
-        TheaterInfo = await eventService.GetGiveawayTheaterInfoAsync(EventModel.GiveawayIndex);
-
-        Title = eventModel.Title;
-        description = eventModel.Contents;
+        var task = eventService.GetGiveawayTheaterInfoAsync(EventModel.GiveawayIndex);
+        var delayTask = Task.Delay(300);
+        Title = EventModel.Title;
+        description = EventModel.Contents;
+        await delayTask;
+        theaterInfo = await task;
+        OnPropertyChanged(nameof(TheaterInfo));
     }
 
     public event PropertyChangedEventHandler? PropertyChanged;

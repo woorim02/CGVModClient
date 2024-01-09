@@ -23,7 +23,7 @@ public partial class GiveawayEventDetailPage : ContentPage
 
     private async void ContentPage_Loaded(object sender, EventArgs e)
     {
-		_ =  ViewModel.LoadAsync(eventIndex);
-		Title = ViewModel.Title;
+        await ViewModel.LoadAsync(eventIndex);
+        Title = ViewModel.Title;
     }
 }
