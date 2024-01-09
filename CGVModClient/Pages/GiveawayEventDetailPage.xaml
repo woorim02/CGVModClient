@@ -30,7 +30,7 @@
                    HorizontalOptions="Start"
                    Margin="0,0,20,0"/>
         </Border>
-        <ListView Grid.Row="1"
+        <ListView x:Name="TheaterList" Grid.Row="1"
                   ItemsSource="{Binding TheaterInfo.TheaterList}"
                   SelectionMode="None">
             <ListView.ItemTemplate>
@@ -44,9 +44,48 @@
                             <Label Text="{Binding TheaterName}" Grid.Row="0"
                                    Style="{StaticResource GiveawayEventNameLabel}"
                                    VerticalOptions="End"/>
-                            <Label Text="{Binding GiveawayRemainCount}" Grid.Row="1"
-                                   Style="{StaticResource GiveawayEventPeriodLabel}"
-                                   VerticalOptions="Start"/>
+                            <HorizontalStackLayout Grid.Row="1"
+                                                   VerticalOptions="Start">
+                                <Border HeightRequest="20" WidthRequest="30" StrokeThickness="0">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="40" />
+                                    </Border.StrokeShape>
+                                    <Border.Triggers>
+                                        <DataTrigger TargetType="Border" Binding="{Binding CountTypeCode}" Value="type4">
+                                            <Setter Property="Border.BackgroundColor" Value="LightGrey"></Setter>
+                                        </DataTrigger>
+                                        <DataTrigger TargetType="Border" Binding="{Binding CountTypeCode}" Value="type3">
+                                            <Setter Property="Border.BackgroundColor" Value="#fb4357"></Setter>
+                                        </DataTrigger>
+                                        <DataTrigger TargetType="Border" Binding="{Binding CountTypeCode}" Value="type2">
+                                            <Setter Property="Border.BackgroundColor" Value="#25c326"></Setter>
+                                        </DataTrigger>
+                                    </Border.Triggers>
+                                    <Label Text="{Binding GiveawayRemainCount}"
+                                           FontSize="12"
+                                           TextColor="Black"
+                                           VerticalOptions="Center"
+                                           VerticalTextAlignment="Center"
+                                           HorizontalTextAlignment="Center"
+                                           HorizontalOptions="Center">
+                                    </Label>
+                                </Border>
+                                <Label Style="{StaticResource GiveawayEventPeriodLabel}"
+                                       VerticalOptions="Center"
+                                       Margin="5,-1,0,0">
+                                    <Label.Triggers>
+                                        <DataTrigger TargetType="Label" Binding="{Binding CountTypeCode}" Value="type4">
+                                            <Setter Property="Label.Text" Value="마감 되었습니다."></Setter>
+                                        </DataTrigger>
+                                        <DataTrigger TargetType="Label" Binding="{Binding CountTypeCode}" Value="type3">
+                                            <Setter Property="Label.Text" Value="재고 소진 임박 입니다."></Setter>
+                                        </DataTrigger>
+                                        <DataTrigger TargetType="Label" Binding="{Binding CountTypeCode}" Value="type2">
+                                            <Setter Property="Label.Text" Value="재고 보유 가능성이 높습니다."></Setter>
+                                        </DataTrigger>
+                                    </Label.Triggers>
+                                </Label>
+                            </HorizontalStackLayout>
                         </Grid>
                     </ViewCell>
                 </DataTemplate>
