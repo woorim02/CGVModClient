@@ -1,4 +1,4 @@
-﻿namespace CGVMacro;
+﻿namespace CGVModClient.Data;
 
 public class GiveawayTheaterInfo
 {

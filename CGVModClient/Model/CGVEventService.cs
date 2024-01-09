@@ -1,5 +1,4 @@
-﻿using CGVMacro;
-using CGVModClient.Data;
+﻿using CGVModClient.Data;
 using HtmlAgilityPack;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
