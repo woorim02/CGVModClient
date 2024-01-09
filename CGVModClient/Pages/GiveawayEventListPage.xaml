@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="CGVModClient.Pages.GiveawayEventListPage"
+             Title="경품 이벤트 현황">
+    <ContentPage.Resources>
+        <Style x:Key="MyBorder" TargetType="Border">
+            <Setter Property="Stroke" Value="LightGray"></Setter>
+        </Style>
+        <Style x:Key="GiveawayEventNameLabel" TargetType="Label">
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="FontAttributes" Value="Bold"/>
+        </Style>
+        <Style x:Key="GiveawayEventPeriodLabel" TargetType="Label">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="TextColor" Value="LightGrey"/>
+        </Style>
+    </ContentPage.Resources>
+    <VerticalStackLayout>
+        <Border Style="{StaticResource MyBorder}"
+                HeightRequest="40"
+                Padding="3">
+            <Label Text="진행중인 경품 이벤트{ }개"
+               VerticalOptions="Center" 
+               HorizontalOptions="Start"
+               Margin="0,0,20,0"/>
+        </Border>
+        <BindableLayout.ItemTemplate>
+            <DataTemplate>
+                <Grid ColumnDefinitions="*,100"
+                    HeightRequest="60">
+                    <VerticalStackLayout>
+                        <Label Text="{Binding GiveawayEventName}"
+                               Style="{StaticResource GiveawayEventNameLabel}"/>
+                        <Label Text="{Binding Period}"
+                               Style="{StaticResource GiveawayEventPeriodLabel}"/>
+                    </VerticalStackLayout>
+                </Grid>
+            </DataTemplate>
+        </BindableLayout.ItemTemplate>
+        <BindableLayout.EmptyView>
+            <StackLayout>
+                <Label Text="None."
+                   FontAttributes="Italic"
+                   FontSize="{StaticResource smallTextSize}" />
+                <Label Text="Try harder and return later?"
+                   FontAttributes="Italic"
+                   FontSize="{StaticResource smallTextSize}" />
+            </StackLayout>
+        </BindableLayout.EmptyView>
+    </VerticalStackLayout>
+</ContentPage>
