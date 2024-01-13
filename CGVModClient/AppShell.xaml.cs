@@ -7,6 +7,7 @@
             InitializeComponent();
 
             Routing.RegisterRoute("GiveawayEventDetailPage", typeof(GiveawayEventDetailPage));
+            Routing.RegisterRoute("GiveawayEventListPage", typeof(GiveawayEventListPage));
         }
     }
 }
