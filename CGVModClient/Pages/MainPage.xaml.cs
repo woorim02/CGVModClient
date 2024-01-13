@@ -12,8 +12,8 @@ public partial class MainPage : ContentPage
         await Shell.Current.GoToAsync($"GiveawayEventListPage");
     }
 
-    private void GoOpenNotificationButton_Clicked(object sender, EventArgs e)
+    private async void GoOpenNotificationButton_Clicked(object sender, EventArgs e)
     {
-
+        await Shell.Current.GoToAsync("BookingOpenNotificationSettingPage");
     }
 }

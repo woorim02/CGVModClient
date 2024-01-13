@@ -8,6 +8,7 @@
 
             Routing.RegisterRoute("GiveawayEventDetailPage", typeof(GiveawayEventDetailPage));
             Routing.RegisterRoute("GiveawayEventListPage", typeof(GiveawayEventListPage));
+            Routing.RegisterRoute("BookingOpenNotificationSettingPage", typeof(BookingOpenNotificationSettingPage));
         }
     }
 }
