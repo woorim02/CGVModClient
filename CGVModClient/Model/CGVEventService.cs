@@ -1,13 +1,7 @@
-﻿using CGVModClient.Data;
-using HtmlAgilityPack;
-using Newtonsoft.Json;
+﻿using HtmlAgilityPack;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace CGVModClient.Model;
 
@@ -76,13 +70,13 @@ public class CGVEventService
 
         var content = await response.Content.ReadAsStringAsync();
         var obj = JObject.Parse(content);
-        var model = obj["d"].ToObject<GiveawayEventModel>();
+        var model = obj["d"]?.ToObject<GiveawayEventModel>();
         if(model == null) { throw new InvalidDataException(content); }
 
         return model;
     }
 
-    public async Task<GiveawayTheaterInfo> GetGiveawayTheaterInfoAsync(string giveawayIndex, int areaCode = 13)
+    public async Task<GiveawayTheaterInfo> GetGiveawayTheaterInfoAsync(string giveawayIndex, string areaCode = "")
     {
         var request = new HttpRequestMessage(HttpMethod.Post, "https://m.cgv.co.kr/Event/GiveawayEventDetail.aspx/GetGiveawayTheaterInfo");
         request.Content = new StringContent($"{{giveawayIndex: '{giveawayIndex}', areaCode: '{areaCode}'}}", Encoding.UTF8, "application/json");
@@ -91,7 +85,7 @@ public class CGVEventService
 
         string content = await response.Content.ReadAsStringAsync();
         var obj = JObject.Parse(content);
-        var info = obj["d"].ToObject<GiveawayTheaterInfo>();
+        var info = obj["d"]?.ToObject<GiveawayTheaterInfo>();
         if (info == null) { throw new InvalidDataException(content); }
 
         foreach (var item in info.TheaterList)
@@ -100,9 +94,6 @@ public class CGVEventService
         }
         return info;
     }
-
-    public async Task<GiveawayTheaterInfo> GetGiveawayTheaterInfoAsync(GiveawayEventModel model, int areaCode = 13)
-        => await GetGiveawayTheaterInfoAsync(model.GiveawayIndex, areaCode);
 
     private static string Decrypt(string data)
     {

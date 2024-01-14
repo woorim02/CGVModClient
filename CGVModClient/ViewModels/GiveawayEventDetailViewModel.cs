@@ -30,7 +30,7 @@ public class GiveawayEventDetailViewModel : INotifyPropertyChanged
 
     public async Task GetTheaterInfoAsync(string areacode)
     {
-        TheaterInfo = await eventService.GetGiveawayTheaterInfoAsync(EventModel.GiveawayIndex, int.Parse(areacode));
+        TheaterInfo = await eventService.GetGiveawayTheaterInfoAsync(EventModel.GiveawayIndex, areacode);
     }
 
     public async Task LoadAsync(string eventIndex)
