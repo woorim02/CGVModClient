@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:cgv_viewmodels="clr-namespace:CGVModClient.ViewModels"
+             x:Class="CGVModClient.Pages.BookingOpenNotificationSettingPage"
+             x:DataType="cgv_viewmodels:BookingOpenNotificationSettingViewModel"
+             Title="예매 오픈 알림 설정">
+    <ContentPage.Resources>
+        <Style x:Key="MyBorder" TargetType="Border">
+            <Setter Property="Stroke" Value="LightGray"/>
+            <Setter Property="Margin" Value="-2,0,-2,0"/>
+            <Setter Property="Padding" Value="7"/>
+            <Setter Property="StrokeThickness" Value="0.5"/>
+        </Style>
+    </ContentPage.Resources>
+    <Grid RowDefinitions="60,30,1*,100">
+        <Border Grid.Row="0" Style ="{StaticResource MyBorder}">
+            <Grid ColumnDefinitions="1*,100" Margin="5,0,0,0">
+                <Label Grid.Column="0"
+                       Text="오픈 알림 받기"
+                       VerticalOptions="Center"
+                       HorizontalOptions="FillAndExpand"/>
+                <Switch Grid.Column="1"/>
+            </Grid>
+        </Border>
+        <ListView Grid.Row="1">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <Grid ColumnDefinitions="200,1*"
+                              HeightRequest="120">
+                            <Image Grid.Column="0"/>
+                            <Grid>
+                                <Label Grid.Row="0"/>
+                                <Label Grid.Row="1"/>
+                                <Label Grid.Row="2"/>
+                            </Grid>
+                        </Grid>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </Grid>
+</ContentPage>
