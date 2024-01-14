@@ -13,14 +13,6 @@ public partial class GiveawayEventDetailPage : ContentPage
         BindingContext = ViewModel;
     }
 
-	public GiveawayEventDetailPage(string eventIndex)
-	{
-		this.eventIndex = eventIndex;
-        InitializeComponent();
-		ViewModel = new GiveawayEventDetailViewModel();
-		BindingContext = ViewModel;
-	}
-
     private async void ContentPage_Loaded(object sender, EventArgs e)
     {
         await ViewModel.LoadAsync(eventIndex);

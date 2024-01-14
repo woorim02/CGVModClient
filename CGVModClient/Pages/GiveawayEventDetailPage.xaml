@@ -26,11 +26,10 @@
         <Border Grid.Row="0" 
                 Style="{StaticResource MyBorder}">
             <Label Text="{Binding Title}"
-                   VerticalOptions="Center" 
-                   HorizontalOptions="Start"
-                   Margin="0,0,20,0"/>
+                   VerticalOptions="Center"/>
         </Border>
-        <ListView x:Name="TheaterList" Grid.Row="1"
+        <ListView Grid.Row="1"
+                  x:Name="TheaterList"
                   ItemsSource="{Binding TheaterInfo.TheaterList}"
                   SelectionMode="None">
             <ListView.ItemTemplate>
@@ -38,10 +37,9 @@
                     <ViewCell>
                         <Grid RowDefinitions="1*,1*"
                               HeightRequest="60"
-                              VerticalOptions="Center"
-                              HorizontalOptions="StartAndExpand"
                               Margin="5">
-                            <Label Text="{Binding TheaterName}" Grid.Row="0"
+                            <Label Grid.Row="0"
+                                   Text="{Binding TheaterName}"
                                    Style="{StaticResource GiveawayEventNameLabel}"
                                    VerticalOptions="End"/>
                             <HorizontalStackLayout Grid.Row="1"
@@ -64,10 +62,8 @@
                                     <Label Text="{Binding GiveawayRemainCount}"
                                            FontSize="12"
                                            TextColor="Black"
-                                           VerticalOptions="Center"
                                            VerticalTextAlignment="Center"
-                                           HorizontalTextAlignment="Center"
-                                           HorizontalOptions="Center">
+                                           HorizontalTextAlignment="Center">
                                     </Label>
                                 </Border>
                                 <Label Style="{StaticResource GiveawayEventPeriodLabel}"

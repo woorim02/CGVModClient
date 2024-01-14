@@ -27,9 +27,7 @@
         <Border Grid.Row="0"
                 Style="{StaticResource MyBorder}">
             <Label Text="{Binding EventState}"
-               VerticalOptions="Center" 
-               HorizontalOptions="Start"
-               Margin="0,0,20,0"/>
+               VerticalOptions="Center"/>
         </Border>
         <ListView Grid.Row="1"
                   ItemsSource="{Binding GiveawayEventList}"
@@ -39,12 +37,9 @@
                 <DataTemplate x:DataType="cgv_data:GiveawayEvent">
                     <ViewCell>
                         <Grid ColumnDefinitions="1*,100"
-                              HeightRequest="60"
-                              HorizontalOptions="Fill"
-                              VerticalOptions="Center">
+                              HeightRequest="60">
                             <VerticalStackLayout Grid.Column="0" 
                                                  VerticalOptions="Center"
-                                                 HorizontalOptions="StartAndExpand"
                                                  Margin="5">
                                 <Label Text="{Binding Title}"
                                        Style="{StaticResource GiveawayEventNameLabel}"/>

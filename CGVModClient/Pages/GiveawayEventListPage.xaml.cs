@@ -1,10 +1,9 @@
-using CGVModClient.ViewModels;
-
 namespace CGVModClient.Pages;
 
 public partial class GiveawayEventListPage : ContentPage
 {
     GiveawayEventListViewModel viewModel;
+
     public GiveawayEventListPage()
 	{
 		InitializeComponent();
