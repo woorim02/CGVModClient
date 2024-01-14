@@ -2,9 +2,9 @@
 
 public class GiveawayEventModel
 {
-    public string Title { get => GiveawayItemList[0].GiveawayItemName; }
+    public string Title { get => GiveawayItemList?[0].GiveawayItemName; }
     public string EventIndex { get; init; }
-    public string GiveawayIndex { get => GiveawayItemList[0].GiveawayItemCode; }
+    public string GiveawayIndex { get => GiveawayItemList?[0].GiveawayItemCode; }
     public string Contents { get; init; }
 
     /// <summary>
