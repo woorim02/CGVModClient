@@ -33,7 +33,7 @@
                   ItemsSource="{Binding TheaterInfo.TheaterList}"
                   SelectionMode="None">
             <ListView.ItemTemplate>
-                <DataTemplate x:DataType="cgv_data:GiveawayTheaterInfo+Theater">
+                <DataTemplate x:DataType="cgv_data:Theater">
                     <ViewCell>
                         <Grid RowDefinitions="1*,1*"
                               HeightRequest="60"
