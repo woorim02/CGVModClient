@@ -4,7 +4,8 @@
              xmlns:cgv_viewmodels="clr-namespace:CGVModClient.ViewModels"
              x:Class="CGVModClient.Pages.BookingOpenNotificationSettingPage"
              x:DataType="cgv_viewmodels:BookingOpenNotificationSettingViewModel"
-             Title="예매 오픈 알림 설정">
+             Title="예매 오픈 알림 설정"
+             Loaded="ContentPage_Loaded">
     <ContentPage.Resources>
         <Style x:Key="MyBorder" TargetType="Border">
             <Setter Property="Stroke" Value="LightGray"/>
@@ -13,17 +14,18 @@
             <Setter Property="StrokeThickness" Value="0.5"/>
         </Style>
     </ContentPage.Resources>
-    <Grid RowDefinitions="60,30,1*,100">
+    <Grid RowDefinitions="60,1*,60">
         <Border Grid.Row="0" Style ="{StaticResource MyBorder}">
             <Grid ColumnDefinitions="1*,100" Margin="5,0,0,0">
                 <Label Grid.Column="0"
                        Text="오픈 알림 받기"
                        VerticalOptions="Center"
                        HorizontalOptions="FillAndExpand"/>
-                <Switch Grid.Column="1"/>
+                <Switch Grid.Column="1"
+                        IsToggled="{Binding IsOpenNotificationEnabled, Mode=TwoWay}"/>
             </Grid>
         </Border>
-        <ListView Grid.Row="1">
+        <ListView Grid.Row="1" CachingStrategy="RecycleElement">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell>
@@ -40,5 +42,9 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
+        <Button Grid.Row="2"
+                x:Name="AddNotificationButton"
+                Text="새 알림 추가"
+                Clicked="AddNotificationButton_Clicked"/>
     </Grid>
 </ContentPage>

@@ -1,13 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
-namespace CGVModClient.ViewModels
+namespace CGVModClient.ViewModels;
+
+public class BookingOpenNotificationSettingViewModel : INotifyPropertyChanged, IViewModel
 {
-    public class BookingOpenNotificationSettingViewModel
-    {
-        public bool IsOpenNotificationEnabled {  get; set; }
+    CgvService service = new CgvService();
+
+    public bool IsOpenNotificationEnabled {
+        get => Preferences.Get("IsOpenNotificationEnabled", false);
+        set { 
+            Preferences.Set("IsOpenNotificationEnabled", value);
+            OnPropertyChanged(nameof(IsOpenNotificationEnabled));
+        }
     }
+
+    public async Task LoadAsync()
+    {
+        
+    }
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null) =>
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 }
