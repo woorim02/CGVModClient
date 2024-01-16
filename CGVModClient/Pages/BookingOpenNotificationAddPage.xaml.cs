@@ -4,9 +4,12 @@ namespace CGVModClient.Pages;
 
 public partial class BookingOpenNotificationAddPage : ContentPage
 {
+    BookingOpenNotificationAddViewModel viewModel;
 	public BookingOpenNotificationAddPage()
 	{
 		InitializeComponent();
+        viewModel = new BookingOpenNotificationAddViewModel();
+        BindingContext = viewModel;
 	}
 
     private async void TitleButton_Clicked(object sender, EventArgs e)
@@ -21,7 +24,11 @@ public partial class BookingOpenNotificationAddPage : ContentPage
     private async void TheaterButton_Clicked(object sender, EventArgs e)
     {
         var popup = new SelectTheaterPopup();
-        var res = await this.ShowPopupAsync(popup);
+        Theater? theater = await this.ShowPopupAsync(popup) as Theater;
+        if (theater != null)
+        {
+            viewModel.Theater = theater;
+        }
     }
 
     private void DateButton_Clicked(object sender, EventArgs e)
