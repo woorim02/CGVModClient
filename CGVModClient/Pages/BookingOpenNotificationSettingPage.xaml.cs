@@ -3,6 +3,7 @@ namespace CGVModClient.Pages;
 public partial class BookingOpenNotificationSettingPage : ContentPage
 {
     BookingOpenNotificationSettingViewModel viewModel;
+
     public BookingOpenNotificationSettingPage()
     {
         InitializeComponent();
@@ -15,8 +16,9 @@ public partial class BookingOpenNotificationSettingPage : ContentPage
         await viewModel.LoadAsync();
     }
 
-    private void AddNotificationButton_Clicked(object sender, EventArgs e)
+    private async void AddNotificationButton_Clicked(object sender, EventArgs e)
     {
-        File.WriteAllText("C:\\Users\\woorim\\source\\vscode\\ttt.txt", Newtonsoft.Json.Linq.JObject.FromObject(Preferences.Default).ToString());
+        var popup = new BookingOpenNotificationAddPage();
+        await AppShell.Current.GoToAsync("BookingOpenNotificationAddPage");
     }
 }
