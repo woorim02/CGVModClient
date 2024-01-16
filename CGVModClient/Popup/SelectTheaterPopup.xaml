@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+               xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+               xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+               xmlns:cgv_data="clr-namespace:CGVModClient.Data"
+               xmlns:cgv_viewmodels="clr-namespace:CGVModClient.Popup.ViewModels"
+               xmlns:cgv_popup="clr-namespace:CGVModClient.Popup"
+               x:DataType="cgv_viewmodels:SelectTheaterViewModel"
+               x:Class="CGVModClient.Popup.SelectTheaterPopup"
+               Color="Transparent"
+               Opened="Popup_Opened">
+    <Border WidthRequest="300"
+            Stroke="Transparent"
+            BackgroundColor="White">
+        <Border.StrokeShape>
+            <RoundRectangle CornerRadius="10"/>
+        </Border.StrokeShape>
+        <Grid RowDefinitions="*,40,210" Padding="5" Background="Transparent">
+            <Label Grid.Row="0" Margin="5" Text="극장 선택" TextColor="Black"/>
+            <ScrollView Grid.Row="1" Orientation="Horizontal" HorizontalScrollBarVisibility="Never">
+                <HorizontalStackLayout HeightRequest="30" BindableLayout.ItemsSource="{Binding Areas}">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="cgv_data:Area">
+                            <Button Padding="0" Text="{Binding AreaName}"
+                                    Background="Transparent"
+                                    Command="{Binding Path=SelectAreaCommand, Source={RelativeSource AncestorType={x:Type cgv_viewmodels:SelectTheaterViewModel} }}"
+                                    CommandParameter="{Binding AreaCode}">
+                            </Button>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </HorizontalStackLayout>
+            </ScrollView>
+            <ScrollView Grid.Row="2">
+                <FlexLayout Wrap="Wrap" Padding="3" BindableLayout.ItemsSource="{Binding Theaters}">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="cgv_data:Theater">
+                            <Button Text="{Binding TheaterName}"
+                                    Padding="5,0,5,0" 
+                                    HeightRequest="35"
+                                    Margin="1.5"
+                                    Background="Transparent"
+                                    BorderColor="LightGrey"
+                                    BorderWidth="1"
+                                    Clicked="TheaterButton_Clicked"
+                                    CommandParameter="{Binding .}"/>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </FlexLayout>
+            </ScrollView>
+        </Grid>
+    </Border>
+</toolkit:Popup>

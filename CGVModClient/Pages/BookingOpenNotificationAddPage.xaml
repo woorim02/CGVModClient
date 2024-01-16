@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              x:Class="CGVModClient.Pages.BookingOpenNotificationAddPage"
-             >
+              Title="예매 오픈 알림 추가">
 
     <Grid RowDefinitions="1*,100">
         <VerticalStackLayout Grid.Row="0" x:Name="popupContent" Spacing="12" VerticalOptions="Center" WidthRequest="250">
@@ -17,16 +17,25 @@
                     ImageSource="https://img.cgv.co.kr/WebApp/images/reservation/schedule/btn_filter_check.png"
                     Text="{Binding MovieFormat, FallbackValue='2D'}"
                     Clicked="MovieFormatButton_Clicked"
-                    Background="White"/>
-            <Button x:Name="TheatherButton"
+                    Background="White"
+                    TextColor="Black"
+                    BorderColor="{StaticResource Gray100}"
+                    BorderWidth="{AppThemeBinding Light= 1, Dark= 0}"/>
+            <Button x:Name="TheaterButton"
                     ImageSource="https://img.cgv.co.kr/WebApp/images/reservation/schedule/bg_quickReservationResult_theater_add.png"
                     Text="{Binding TheaterName, FallbackValue='CGV 용산아이파크몰'}"
-                    Clicked="TheatherButton_Clicked"
-                    Background="White"/>
+                    Clicked="TheaterButton_Clicked"
+                    Background="White"
+                    TextColor="Black"
+                    BorderColor="{StaticResource Gray100}"
+                    BorderWidth="{AppThemeBinding Light= 1, Dark= 0}"/>
             <Button x:Name="DateButton"
                     Text="{Binding TargetDate, FallbackValue='2023-01-17, 수요일'}"
                     Clicked="DateButton_Clicked"
-                    Background="White"/>
+                    Background="White"
+                    TextColor="Black"
+                    BorderColor="{StaticResource Gray100}"
+                    BorderWidth="{AppThemeBinding Light= 1, Dark= 0}"/>
         </VerticalStackLayout>
         <Button Grid.Row="1"
                 x:Name="ConfirmButton"

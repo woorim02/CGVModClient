@@ -1,6 +1,7 @@
 ﻿using HtmlAgilityPack;
 using Newtonsoft.Json.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace CGVModClient.Model;
 
@@ -43,6 +44,8 @@ public class CgvService
                 var innerText = areasNode[i].SelectSingleNode("a/div/strong").InnerText.Replace(")",string.Empty);
                 var name = innerText.Split("(")[0];
                 var count = innerText.Split("(")[1];
+                name = Regex.Replace(name, @"\s+", string.Empty);
+                count = Regex.Replace(count, @"\s+", string.Empty);
                 areas.Add(new Area
                 {
                     AreaCode = regioncode,
@@ -61,7 +64,7 @@ public class CgvService
     public async Task<Theater[]> GetTheatersAsync(string regionCode)
     {
         var request = new HttpRequestMessage(HttpMethod.Post, "https://m.cgv.co.kr/WebApp/MyCgvV5/favoriteTheater.aspx/GetRegionTheaterList");
-        request.Content = new StringContent("{ regionCode: ''}", Encoding.UTF8, "application/json");
+        request.Content = new StringContent($"{{ regionCode: '{regionCode}'}}", Encoding.UTF8, "application/json");
         var response = await defaultClient.SendAsync(request);
         response.EnsureSuccessStatusCode();
 
