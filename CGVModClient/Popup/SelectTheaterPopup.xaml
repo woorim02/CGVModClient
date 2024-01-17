@@ -16,12 +16,12 @@
             <RoundRectangle CornerRadius="10"/>
         </Border.StrokeShape>
         <Grid RowDefinitions="*,40,210" Padding="5" Background="Transparent">
-            <Label Grid.Row="0" Margin="5" Text="극장 선택" TextColor="Black"/>
+            <Label Grid.Row="0" Margin="5" Text="극장 선택" TextColor="Black" FontAttributes="Bold"/>
             <ScrollView Grid.Row="1" Orientation="Horizontal" HorizontalScrollBarVisibility="Never">
                 <HorizontalStackLayout HeightRequest="30" BindableLayout.ItemsSource="{Binding Areas}">
                     <BindableLayout.ItemTemplate>
                         <DataTemplate x:DataType="cgv_data:Area">
-                            <Button Padding="0" Text="{Binding AreaName}"
+                            <Button Padding="0" Text="{Binding AreaName}" TextColor="Black"
                                     Background="Transparent"
                                     Command="{Binding Path=SelectAreaCommand, Source={RelativeSource AncestorType={x:Type cgv_viewmodels:SelectTheaterViewModel} }}"
                                     CommandParameter="{Binding AreaCode}">
@@ -34,7 +34,7 @@
                 <FlexLayout Wrap="Wrap" Padding="3" BindableLayout.ItemsSource="{Binding Theaters}">
                     <BindableLayout.ItemTemplate>
                         <DataTemplate x:DataType="cgv_data:Theater">
-                            <Button Text="{Binding TheaterName}"
+                            <Button Text="{Binding TheaterName}" TextColor="Black"
                                     Padding="5,0,5,0" 
                                     HeightRequest="35"
                                     Margin="1.5"
