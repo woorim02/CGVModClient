@@ -10,6 +10,8 @@ public partial class BookingOpenNotificationAddPage : ContentPage
 		InitializeComponent();
         viewModel = new BookingOpenNotificationAddViewModel();
         BindingContext = viewModel;
+        datePicker.MinimumDate = DateTime.Now;
+        datePicker.MaximumDate = DateTime.Now.AddMonths(1);
 	}
 
     private async void TitleButton_Clicked(object sender, EventArgs e)
@@ -34,11 +36,6 @@ public partial class BookingOpenNotificationAddPage : ContentPage
         {
             viewModel.Theater = theater;
         }
-    }
-
-    private void DateButton_Clicked(object sender, EventArgs e)
-    {
-
     }
 
     private void ConfirmButton_Clicked(object sender, EventArgs e)

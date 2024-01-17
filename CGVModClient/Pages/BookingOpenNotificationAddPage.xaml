@@ -31,13 +31,13 @@
                     TextColor="Black"
                     BorderColor="{StaticResource Gray100}"
                     BorderWidth="{AppThemeBinding Light= 1, Dark= 0}"/>
-            <Button x:Name="DateButton"
-                    Text="{Binding TargetDate, StringFormat=\{0:yyyy-MM-dd dddd\}}"
-                    Clicked="DateButton_Clicked"
-                    Background="White"
-                    TextColor="Black"
-                    BorderColor="{StaticResource Gray100}"
-                    BorderWidth="{AppThemeBinding Light= 1, Dark= 0}"/>
+            <Border Stroke="{StaticResource Gray100}">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="8"/>
+                </Border.StrokeShape>
+                <DatePicker x:Name="datePicker" HeightRequest="44" HorizontalOptions="Center"
+                            Date="{Binding TargetDate, Mode=TwoWay}" Format="yyyy-MM-dd dddd"/>
+            </Border>
         </VerticalStackLayout>
         <Button Grid.Row="1"
                 x:Name="ConfirmButton"
