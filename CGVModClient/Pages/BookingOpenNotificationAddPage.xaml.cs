@@ -14,7 +14,12 @@ public partial class BookingOpenNotificationAddPage : ContentPage
 
     private async void TitleButton_Clicked(object sender, EventArgs e)
     {
-
+        var popup = new SelectMoviePopup();
+        Movie? movie = await this.ShowPopupAsync(popup) as Movie;
+        if (movie != null)
+        {
+            viewModel.Movie = movie;
+        }
     }
     private void MovieFormatButton_Clicked(object sender, EventArgs e)
     {

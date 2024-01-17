@@ -6,7 +6,7 @@ namespace CGVModClient.ViewModels;
 public partial class BookingOpenNotificationAddViewModel : ObservableObject, IViewModel
 {
     [ObservableProperty]
-    string? title;
+    Movie? movie;
     [ObservableProperty]
     string? movieFormat;
     [ObservableProperty]

@@ -11,7 +11,7 @@
         <VerticalStackLayout Grid.Row="0" x:Name="popupContent" Spacing="12" VerticalOptions="Center" WidthRequest="250">
             <Button x:Name="TitleButton"
                     ImageSource="https://img.cgv.co.kr/WebApp/images/reservation/schedule/bg_quickReservationResult_movie_add.png"
-                    Text="{Binding Title, TargetNullValue='영화를 선택해 주세요.'}"
+                    Text="{Binding Movie.Title, FallbackValue='영화를 선택해 주세요.'}"
                     Clicked="TitleButton_Clicked"
                     Background="Transparent"
                     TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"/>
