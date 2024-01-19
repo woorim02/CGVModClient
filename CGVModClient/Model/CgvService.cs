@@ -157,20 +157,8 @@ public class CgvService
 
     public async Task<string> GetMovieGroupCdAsync(string movieIndex)
     {
-        var gateWayResponse = await defaultClient.GetAsync($"https://m.cgv.co.kr/WebApp/fanpage/Gateway.aspx?movieIdx={movieIndex}");
-        var request = new HttpRequestMessage(HttpMethod.Post, $"https://moviestory.cgv.co.kr/fanpage/login");
-        request.Headers.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0;) Chrome/120.0.0.0 Safari/537.36");
-        request.Headers.Host = "moviestory.cgv.co.kr";
-        request.Headers.Add("Cookie", gateWayResponse.Headers.GetValues("Set-Cookie"));
-        request.Content = new FormUrlEncodedContent(new Dictionary<string, string>
-        {
-            {"fanpageMovieIdx", movieIndex },
-            {"fanpageIsWebView","false" }
-        });
-        //request.Headers.Host = "moviestory.cgv.co.kr";
-        var response = await defaultClient.SendAsync(request);
-        var content = await response.Content.ReadAsStringAsync();
-        var reader = new StringReader(content);
+        var htmlText = await GetFanpageHtmlText(movieIndex);
+        var reader = new StringReader(htmlText);
         while (true)
         {
             string? line = reader.ReadLine();
@@ -184,6 +172,38 @@ public class CgvService
         }
     }
 
+    public async Task<string[]> GetScreenTypesAsync(string movieIndex)
+    {
+        var list = new List<string> { "2D" };
+        var document = new HtmlDocument();
+        var text = await GetFanpageHtmlText(movieIndex);
+        document.LoadHtml(text);
+        var nodes = document.DocumentNode.SelectNodes("//ul[@class='screenType']/li/img");
+        if (nodes == null)
+            return list.ToArray();
+        foreach (var n in nodes)
+            list.Add(n.Attributes["alt"].Value);
+        return list.ToArray();
+    }
+
+    private async Task<string> GetFanpageHtmlText(string movieIndex)
+    {
+        var gateWayResponse = await defaultClient.GetAsync($"https://m.cgv.co.kr/WebApp/fanpage/Gateway.aspx?movieIdx={movieIndex}");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"https://moviestory.cgv.co.kr/fanpage/login");
+        request.Headers.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0;) Chrome/120.0.0.0 Safari/537.36");
+        request.Headers.Host = "moviestory.cgv.co.kr";
+        request.Headers.Add("Cookie", gateWayResponse.Headers.GetValues("Set-Cookie"));
+        request.Content = new FormUrlEncodedContent(new Dictionary<string, string>
+        {
+            {"fanpageMovieIdx", movieIndex },
+            {"fanpageIsWebView","false" }
+        });
+        //request.Headers.Host = "moviestory.cgv.co.kr";
+        var response = await defaultClient.SendAsync(request);
+        var content = await response.Content.ReadAsStringAsync();
+        return content;
+    }
+
     private static List<Movie> ParseMovieList(string content)
     {
         List<Movie> movies = new List<Movie>();
@@ -192,24 +212,35 @@ public class CgvService
         var imageNodes = document.DocumentNode.SelectNodes("//span[@class='imgbox']/img");
         var contentsNodes = document.DocumentNode.SelectNodes("//div[@class='txtbox']");
         var jsNodes = document.DocumentNode.SelectNodes("//a[@class='btn_reserve']");
-        if ((imageNodes.Count != contentsNodes.Count) || (imageNodes.Count != jsNodes.Count))
-            throw new InvalidDataException($"Count err! {imageNodes.Count}, {contentsNodes.Count}, {jsNodes.Count}");
-        if( imageNodes.Count  == 0 )
+        var icoTheaterNodes = document.DocumentNode.SelectNodes("//div[@class='ico_theater2']");
+        if ((imageNodes.Count != contentsNodes.Count) || (contentsNodes.Count != jsNodes.Count) || (jsNodes.Count != icoTheaterNodes.Count))
+            throw new InvalidDataException($"Count err! {imageNodes.Count}, {contentsNodes.Count}, {jsNodes.Count}, {icoTheaterNodes.Count}");
+        if (imageNodes.Count == 0)
             return movies;
         for (int i = 0; i < contentsNodes.Count; i++)
         {
             try
             {
-                var title = imageNodes[i].Attributes["alt"].Value;
-                var imgSource = imageNodes[i].Attributes["src"].Value;
+                string title = imageNodes[i].Attributes["alt"].Value;
+                string imgSource = imageNodes[i].Attributes["src"].Value;
+
                 var spArr = imgSource.Split("/");
-                var index = imgSource.Split('/')[spArr.Length - 1].Split('_')[0];
-                var movieGroupCd = jsNodes[i].Attributes["onclick"].Value.Split("', '")[1];
-                var movie = new Movie() {
+                string index = imgSource.Split('/')[spArr.Length - 1].Split('_')[0];
+                string movieGroupCd = jsNodes[i].Attributes["onclick"].Value.Split("', '")[1];
+
+                var spanNodes = icoTheaterNodes[i].SelectNodes("span");
+                List<string> screenTypes = ["2D"];
+                var list = spanNodes?.Select(s => s.InnerText);
+                if (list != null)
+                    screenTypes.AddRange(list);
+
+                var movie = new Movie()
+                {
                     Title = title,
                     Index = index,
                     ThumbnailSource = imgSource,
                     MovieGroupCd = movieGroupCd,
+                    ScreenTypes = screenTypes.ToArray()
                 };
                 movies.Add(movie);
             }
