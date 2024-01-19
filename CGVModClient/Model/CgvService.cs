@@ -1,5 +1,4 @@
 ﻿using HtmlAgilityPack;
-using Microsoft.Maui.Controls.PlatformConfiguration;
 using Newtonsoft.Json.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -87,34 +86,30 @@ public class CgvService
 
     public async Task<Movie[]> GetMoviesAsync()
     {
-        var request = new HttpRequestMessage(HttpMethod.Get, "http://www.cgv.co.kr/movies/?lt=1&ft=0");
-        request.Headers.Add("Accept", "ext/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7");
-        request.Headers.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0;) Chrome/120.0.0.0 Safari/537.36");
-        request.Headers.Host = "www.cgv.co.kr";
-        var response = await defaultClient.SendAsync(request);
-        response.EnsureSuccessStatusCode();
-        var content = await response.Content.ReadAsStringAsync();
-        var document = new HtmlDocument();
-        document.LoadHtml(content);
-        var imageNodes = document.DocumentNode.SelectNodes("//span[@class='thumb-image']");
-        var contentsNodes = document.DocumentNode.SelectNodes("//div[@class='box-contents']");
-        if (imageNodes.Count != contentsNodes.Count)
-            throw new InvalidDataException($"imageNodes.Count({imageNodes.Count} != contentsNodes.Count({contentsNodes.Count})");
         var movies = new List<Movie>();
-        for( int i = 0; i < contentsNodes.Count; i++)
+        for (int i = 1; true; i++)
         {
-            try
+            var request = new HttpRequestMessage(HttpMethod.Post, "https://m.cgv.co.kr/WebAPP/MovieV4/ajaxMovie.aspx");
+            var payload = new Dictionary<string, string>
             {
-                movies.Add(new Movie() { 
-                    Title = contentsNodes[i].SelectSingleNode("a/strong").InnerText, 
-                    Index = contentsNodes[i].SelectSingleNode("a").Attributes["href"].Value.Split('=')[1],
-                    ThumbnailSource = imageNodes[i].SelectSingleNode("img").Attributes["src"].Value,
-                });
-            }
-            catch (Exception ex) { 
-                throw new InvalidDataException(content, ex);
-            }
+                { "iPage" , $"{i}"},
+                { "pageRow" , $"{20}"},
+                { "mtype", "now" },
+                { "morder", "TicketRate" },
+                { "mnowflag",  $"{0}" },
+                { "mdistype", "" },
+                { "flag", "MLIST" }
+            };
+            request.Content = new FormUrlEncodedContent(payload);
+            var response = await defaultClient.SendAsync(request);
+            response.EnsureSuccessStatusCode();
+            var content = await response.Content.ReadAsStringAsync();
+            var list = ParseMovieList(content);
+            movies.AddRange(list);
+            if (list.Count < 20)
+                break;
         }
+
         return movies.ToArray();
     }
 
@@ -153,5 +148,42 @@ public class CgvService
             movies.Add(movie);
         }
         return movies.ToArray();
+    }
+
+    private static List<Movie> ParseMovieList(string content)
+    {
+        List<Movie> movies = new List<Movie>();
+        var document = new HtmlDocument();
+        document.LoadHtml(content);
+        var imageNodes = document.DocumentNode.SelectNodes("//span[@class='imgbox']/img");
+        var contentsNodes = document.DocumentNode.SelectNodes("//div[@class='txtbox']");
+        var jsNodes = document.DocumentNode.SelectNodes("//a[@class='btn_reserve']");
+        if ((imageNodes.Count != contentsNodes.Count) || (imageNodes.Count != jsNodes.Count))
+            throw new InvalidDataException($"Count err! {imageNodes.Count}, {contentsNodes.Count}, {jsNodes.Count}");
+        if( imageNodes.Count  == 0 )
+            return movies;
+        for (int i = 0; i < contentsNodes.Count; i++)
+        {
+            try
+            {
+                var title = imageNodes[i].Attributes["alt"].Value;
+                var imgSource = imageNodes[i].Attributes["src"].Value;
+                var spArr = imgSource.Split("/");
+                var index = imgSource.Split('/')[spArr.Length - 1].Split('_')[0];
+                var movieGroupCd = jsNodes[i].Attributes["onclick"].Value.Split("', '")[1];
+                var movie = new Movie() {
+                    Title = title,
+                    Index = index,
+                    ThumbnailSource = imgSource,
+                    MovieGroupCd = movieGroupCd,
+                };
+                movies.Add(movie);
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidDataException("MovieList Parse err!", ex);
+            }
+        }
+        return movies;
     }
 }
