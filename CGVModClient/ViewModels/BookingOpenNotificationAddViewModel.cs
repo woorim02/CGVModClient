@@ -1,5 +1,6 @@
 ﻿
 using CommunityToolkit.Mvvm.ComponentModel;
+using System.ComponentModel;
 
 namespace CGVModClient.ViewModels;
 
@@ -14,13 +15,16 @@ public partial class BookingOpenNotificationAddViewModel : ObservableObject, IVi
     [ObservableProperty]
     DateTime? targetDate;
 
+    public BookingOpenNotificationInfo Info { get; set; }
+
     public BookingOpenNotificationAddViewModel() 
     {
         targetDate = DateTime.Now.AddDays(1);
+        Info = new BookingOpenNotificationInfo();
     }
 
     public async Task LoadAsync()
     {
-        
+
     }
 }
