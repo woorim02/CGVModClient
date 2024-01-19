@@ -3,6 +3,7 @@ using Newtonsoft.Json.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
+using System.Linq;
 
 namespace CGVModClient.Model;
 
@@ -139,15 +140,48 @@ public class CgvService
         var movies = new List<Movie>();
         for(int i = 0; i<nodes.Count; i++)
         {
+            var title = nodes[i].Attributes["alt"].Value;
+            var imgSource = nodes[i].Attributes["src"].Value;
+            var sp = imgSource.Split('/');
+            var index = imgSource.Split('/')[sp.Length - 1].Split('_')[0];
             var movie = new Movie() {
-                Title = nodes[i].Attributes["alt"].Value,
-                ThumbnailSource = nodes[i].Attributes["src"].Value
+                Title = title,
+                ThumbnailSource = imgSource,
+                Index = index,
+
             };
-            var sp = movie.ThumbnailSource.Split('/');
-            movie.Index = movie.ThumbnailSource.Split('/')[sp.Length - 1].Split('_')[0];
             movies.Add(movie);
         }
         return movies.ToArray();
+    }
+
+    public async Task<string> GetMovieGroupCdAsync(string movieIndex)
+    {
+        var gateWayResponse = await defaultClient.GetAsync($"https://m.cgv.co.kr/WebApp/fanpage/Gateway.aspx?movieIdx={movieIndex}");
+        var request = new HttpRequestMessage(HttpMethod.Post, $"https://moviestory.cgv.co.kr/fanpage/login");
+        request.Headers.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0;) Chrome/120.0.0.0 Safari/537.36");
+        request.Headers.Host = "moviestory.cgv.co.kr";
+        request.Headers.Add("Cookie", gateWayResponse.Headers.GetValues("Set-Cookie"));
+        request.Content = new FormUrlEncodedContent(new Dictionary<string, string>
+        {
+            {"fanpageMovieIdx", movieIndex },
+            {"fanpageIsWebView","false" }
+        });
+        //request.Headers.Host = "moviestory.cgv.co.kr";
+        var response = await defaultClient.SendAsync(request);
+        var content = await response.Content.ReadAsStringAsync();
+        var reader = new StringReader(content);
+        while (true)
+        {
+            string? line = reader.ReadLine();
+            if (line == null)
+                throw new InvalidDataException("무비그룹을 찾을 수 없음");
+            if (line.Contains("mgCD"))
+            {
+                var value = Regex.Replace(line, @"\D", string.Empty);
+                return value;
+            }
+        }
     }
 
     private static List<Movie> ParseMovieList(string content)

@@ -8,5 +8,8 @@ public class Movie
     /// <summary>
     /// 영화코드 - 모코드
     /// </summary>
-    public string MovieGroupCd { get; set;}
+    /// <remarks>
+    /// null 체크 필수.
+    /// </remarks>
+    public string? MovieGroupCd { get; set;}
 }
