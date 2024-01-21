@@ -89,6 +89,9 @@
 	  <MauiXaml Update="Pages\MainPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Pages\YongsanIMAXOpenNotificationPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Popup\SelectMoviePopup.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
