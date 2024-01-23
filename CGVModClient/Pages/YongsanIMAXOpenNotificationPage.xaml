@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:cgv_viewmodel="clr-namespace:CGVModClient.ViewModels"
              x:Class="CGVModClient.Pages.YongsanIMAXOpenNotificationPage"
-             Title="용아맥 오픈알림">
+             x:DataType="cgv_viewmodel:YongsanIMAXOpenNotificationViewModel"
+             Title="용아맥 오픈알림"
+             Appearing="ContentPage_Appearing">
     <VerticalStackLayout>
-        <Label 
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
+        <Button x:Name="RunButton"
+                Text="{Binding State}"
+                Command="{Binding ActionCommand}"/>
     </VerticalStackLayout>
 </ContentPage>
