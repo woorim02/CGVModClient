@@ -21,6 +21,8 @@ public class MyForegroundService : Service
     private string OPEN_CHANNEL_ID = "2000";
     private int OPEN_ID = 2;
     private string OPEN_CHANNEL_NAME = "open_notification";
+    private string OPEN_GROUP_KEY = "OPEN_GROUP_KEY";
+    private string OPEN_GROUP_NAME = "OPEN_GROUP_NAME";
 
     private CancellationTokenSource _cts;
     private bool _isRunning;
@@ -36,6 +38,7 @@ public class MyForegroundService : Service
         var openChannel = new NotificationChannel(OPEN_CHANNEL_ID, OPEN_CHANNEL_NAME, NotificationImportance.High);
         if (Build.VERSION.SdkInt >= BuildVersionCodes.O)
             notificationManager.CreateNotificationChannel(openChannel);
+        notificationManager.CreateNotificationChannelGroup(new NotificationChannelGroup(OPEN_GROUP_KEY, OPEN_GROUP_NAME));
         var notification = new NotificationCompat.Builder(this, Foreground_CHANNEL_ID)
             .SetAutoCancel(false)
             .SetOngoing(true)
@@ -51,6 +54,13 @@ public class MyForegroundService : Service
         return StartCommandResult.Sticky;
     }
 
+    public override void OnDestroy()
+    {
+        _cts.Cancel();
+        _isRunning = false;
+        base.OnDestroy();
+    }
+
     public override IBinder? OnBind(Intent? intent)
     {
         return null;
@@ -58,14 +68,36 @@ public class MyForegroundService : Service
 
     private async Task RunTask(CancellationToken cts)
     {
+        var service = new CgvService();
+        TheaterScheduleListRoot root;
+        string[] days;
+        root = await service.GetScheduleListAsync("0013", DateTime.Now.AddDays(1));
+        days = root.ResultSchedule.ListPlayYmd.Split('|');
         while (_isRunning && !cts.IsCancellationRequested)
         {
-            // 예매 스케줄을 API로 가져오는 작업 수행
-            // 새로운 스케줄이 있다면 푸시 알림을 보내는 로직 추가
-
-            // 1분마다 작업을 반복하도록 설정
-            SendOpenNotification("adsfsadf", "fsad");
-            await Task.Delay(TimeSpan.FromMinutes(1), cts);
+            await Task.Delay(TimeSpan.FromSeconds(10), cts);
+            var nowRoot = await service.GetScheduleListAsync("0013", DateTime.Now.AddDays(1));
+            var nowDays = nowRoot.ResultSchedule.ListPlayYmd.Split('|');
+            var diff = nowDays.Where(x =>
+            {
+                var a = days.Contains(x);
+                return !a;
+            }).ToList();
+            if (diff.Count() != 0) {
+                if (diff[0] == days[0] && diff.Count == 1){
+                    //다음날로 넘어가서 당일 스케쥴이 사라진 경우
+                    days = nowDays;
+                    continue;
+                }
+                if (diff[0] == days[0] && diff.Count != 1)
+                {
+                    //다음날로 넘어감과 동시에 오픈된 경우
+                    diff.RemoveAt(0);
+                }
+                     
+                SendOpenNotification("용아맥 오픈", $"용아맥 오픈 {string.Join(", ", diff)}일");
+                days = nowDays;
+            }
         }
     }
 
@@ -77,7 +109,8 @@ public class MyForegroundService : Service
             .SetSmallIcon(Resource.Mipmap.appicon)
             .SetContentTitle(title)
             .SetContentText(message)
-            .SetAutoCancel(true);
+            .SetGroup(OPEN_GROUP_KEY);
+            //.SetPriority((int)NotificationImportance.High);
 
         notificationManager.Notify(OPEN_ID, notification.Build());
     }
