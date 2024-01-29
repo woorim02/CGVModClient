@@ -16,4 +16,9 @@ public partial class MainPage : ContentPage
     {
         await Shell.Current.GoToAsync("BookingOpenNotificationSettingPage");
     }
+
+    private async void YongsanIMAXOpenNotification_Clicked(object sender, EventArgs e)
+    {
+        await Shell.Current.GoToAsync("YongsanIMAXOpenNotificationPage");
+    }
 }

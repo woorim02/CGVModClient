@@ -4,6 +4,8 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Linq;
+using Newtonsoft.Json;
+using System.Net;
 
 namespace CGVModClient.Model;
 
@@ -14,10 +16,13 @@ public class CgvService
 
     static CgvService()
     {
-        defaultClient = new HttpClient();
+        defaultClient = new HttpClient(new HttpClientHandler()
+        {
+            UseCookies = true,
+            CookieContainer = new CookieContainer()
+        });
         defaultClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0;) Chrome/120.0.0.0 Safari/537.36");
         defaultClient.DefaultRequestHeaders.Host = "m.cgv.co.kr";
-
         authClient = new HttpClient();
     }
 
@@ -184,6 +189,36 @@ public class CgvService
         foreach (var n in nodes)
             list.Add(n.Attributes["alt"].Value);
         return list.ToArray();
+    }
+
+    public async Task<TheaterScheduleListRoot> GetScheduleListAsync(string theaterCode, DateTime date, string screenTypeCode = "02")
+    {
+        var request = new HttpRequestMessage(HttpMethod.Get, "https://m.cgv.co.kr/WebApp/Reservation/Schedule.aspx");
+        await defaultClient.SendAsync(request);
+
+        request = new HttpRequestMessage(HttpMethod.Post, "https://m.cgv.co.kr/WebAPP/Reservation/Common/ajaxTheaterScheduleList.aspx/GetTheaterScheduleList");
+        request.Headers.Add("Accept", "application/json, text/javascript, */*; q=0.01");
+        request.Headers.Add("Accept-Language", "ko-KR,ko;q=0.8,en-US;q=0.5,en;q=0.3");
+        request.Headers.Add("Origin", "https://m.cgv.co.kr");
+        request.Headers.Add("Cookie", "URL_PREV_COMMON=");
+        var body = new
+        {
+            strRequestType = "THEATER",
+            strUserID = "",
+            strMovieGroupCd = "",
+            strMovieTypeCd = "",
+            strPlayYMD = $"{date:yyyyMMdd}",
+            strTheaterCd = theaterCode,
+            strScreenTypeCd = screenTypeCode,
+            strRankType = "MOVIE",
+        };
+        request.Content = new StringContent(JsonConvert.SerializeObject(body), Encoding.UTF8, "application/json");
+
+        var response = await defaultClient.SendAsync(request);
+        var content = await response.Content.ReadAsStringAsync();
+        content = JObject.Parse(content)["d"].ToString();
+        var root = JsonConvert.DeserializeObject<TheaterScheduleListRoot>(content);
+        return root;
     }
 
     private async Task<string> GetFanpageHtmlText(string movieIndex)
