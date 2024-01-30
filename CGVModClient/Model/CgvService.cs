@@ -87,13 +87,21 @@ public class CgvService
         {
             throw new InvalidDataException(content, ex);
         }
-        return theaters.ToArray();
+        return theaters?.ToArray() ?? new Theater[0];
     }
 
     public async Task<Movie[]> GetMoviesAsync()
     {
         var movies = new List<Movie>();
-        for (int i = 1; true; i++)
+        var firstRequest = new HttpRequestMessage(HttpMethod.Get, "https://m.cgv.co.kr/WebAPP/MovieV4/movieList.aspx?iPage=1");
+        var firstResponse = await defaultClient.SendAsync(firstRequest);
+        firstResponse.EnsureSuccessStatusCode();
+        var firstContent = await firstResponse.Content.ReadAsStringAsync();
+        var firstList = ParseMovieList(firstContent);
+        movies.AddRange(firstList);
+        if (firstList.Count < 20)
+            return movies.ToArray();
+        for (int i = 2; true; i++)
         {
             var request = new HttpRequestMessage(HttpMethod.Post, "https://m.cgv.co.kr/WebAPP/MovieV4/ajaxMovie.aspx");
             var payload = new Dictionary<string, string>
@@ -182,6 +190,8 @@ public class CgvService
         var list = new List<string> { "2D" };
         var document = new HtmlDocument();
         var text = await GetFanpageHtmlText(movieIndex);
+        if (text.Contains("페이지를 찾을 수 없습니다."))
+            throw new InvalidDataException("페이지를 찾을 수 없습니다.");
         document.LoadHtml(text);
         var nodes = document.DocumentNode.SelectNodes("//ul[@class='screenType']/li/img");
         if (nodes == null)
