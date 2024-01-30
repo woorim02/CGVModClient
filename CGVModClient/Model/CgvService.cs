@@ -11,9 +11,9 @@ namespace CGVModClient.Model;
 
 public class CgvService
 {
-    private static HttpClient defaultClient;
-    private static HttpClient authClient;
-    private static SocketsHttpHandler authHandler;
+    private static HttpClient _client;
+    private static HttpClient _authClient;
+    private static SocketsHttpHandler _authHandler;
 
     private static Aes _aes;
     private static SHA256 _sha256;
@@ -21,22 +21,22 @@ public class CgvService
 
     static CgvService()
     {
-        defaultClient = new HttpClient(new SocketsHttpHandler()
+        _client = new HttpClient(new SocketsHttpHandler()
         {
             UseCookies = true,
             CookieContainer = new CookieContainer()
         });
-        defaultClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0;) Chrome/120.0.0.0 Safari/537.36");
-        defaultClient.DefaultRequestHeaders.Host = "m.cgv.co.kr";
+        _client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0;) Chrome/120.0.0.0 Safari/537.36");
+        _client.DefaultRequestHeaders.Host = "m.cgv.co.kr";
 
-        authHandler = new SocketsHttpHandler()
+        _authHandler = new SocketsHttpHandler()
         {
             UseCookies = true,
             CookieContainer = new CookieContainer()
         };
-        authClient = new HttpClient(authHandler);
-        authClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0;) Chrome/120.0.0.0 Safari/537.36");
-        authClient.DefaultRequestHeaders.Host = "m.cgv.co.kr";
+        _authClient = new HttpClient(_authHandler);
+        _authClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0;) Chrome/120.0.0.0 Safari/537.36");
+        _authClient.DefaultRequestHeaders.Host = "m.cgv.co.kr";
 
         _aes = Aes.Create();
         _aes.IV = Convert.FromBase64String("YjUxMWM3MWI5M2E3NDhmNA==");
@@ -47,18 +47,20 @@ public class CgvService
 
     public CgvEventService Event { get; private set; }
     public CgvAuthService Auth { get; private set; }
+    public CgvReservationService Reservation { get; private set; }
 
     public CgvService()
     {
-        Event = new CgvEventService(defaultClient, _aes);
-        Auth = new CgvAuthService(authClient, authHandler, _aes, _sha256, _md5);
+        Event = new CgvEventService(_client, _aes);
+        Auth = new CgvAuthService(_authClient, _authHandler, _aes, _sha256, _md5);
+        Reservation = new CgvReservationService(_client, _authClient);
     }
 
 
 
     public async Task<Area[]> GetAreasAsync()
     {
-        var response = await defaultClient.GetAsync("https://m.cgv.co.kr/WebApp/TheaterV4/");
+        var response = await _client.GetAsync("https://m.cgv.co.kr/WebApp/TheaterV4/");
         response.EnsureSuccessStatusCode();
 
         var content = await response.Content.ReadAsStringAsync();
@@ -97,7 +99,7 @@ public class CgvService
     {
         var request = new HttpRequestMessage(HttpMethod.Post, "https://m.cgv.co.kr/WebApp/MyCgvV5/favoriteTheater.aspx/GetRegionTheaterList");
         request.Content = new StringContent($"{{ regionCode: '{regionCode}'}}", Encoding.UTF8, "application/json");
-        var response = await defaultClient.SendAsync(request);
+        var response = await _client.SendAsync(request);
         response.EnsureSuccessStatusCode();
 
         var content = await response.Content.ReadAsStringAsync();
@@ -119,7 +121,7 @@ public class CgvService
     {
         var movies = new List<Movie>();
         var firstRequest = new HttpRequestMessage(HttpMethod.Get, "https://m.cgv.co.kr/WebAPP/MovieV4/movieList.aspx?iPage=1");
-        var firstResponse = await defaultClient.SendAsync(firstRequest);
+        var firstResponse = await _client.SendAsync(firstRequest);
         firstResponse.EnsureSuccessStatusCode();
         var firstContent = await firstResponse.Content.ReadAsStringAsync();
         var firstList = ParseMovieList(firstContent);
@@ -140,7 +142,7 @@ public class CgvService
                 { "flag", "MLIST" }
             };
             request.Content = new FormUrlEncodedContent(payload);
-            var response = await defaultClient.SendAsync(request);
+            var response = await _client.SendAsync(request);
             response.EnsureSuccessStatusCode();
             var content = await response.Content.ReadAsStringAsync();
             var list = ParseMovieList(content);
@@ -156,7 +158,7 @@ public class CgvService
     {
         var checkRequest = new HttpRequestMessage(HttpMethod.Post, "https://m.cgv.co.kr/WebAPP/Search/Default.aspx/CheckKeyword");
         checkRequest.Content = new StringContent($"{{keyword: '{HttpUtility.UrlEncode(keyword)}'}}", Encoding.UTF8, "application/json");
-        var checkResponse = await defaultClient.SendAsync(checkRequest);
+        var checkResponse = await _client.SendAsync(checkRequest);
         checkResponse.EnsureSuccessStatusCode();
         var checkResponseObject = JObject.Parse(await checkResponse.Content.ReadAsStringAsync());
         if (checkResponseObject["d"]?.ToString() != "00000")
@@ -164,7 +166,7 @@ public class CgvService
 
         var getMovieListRequest = new HttpRequestMessage(HttpMethod.Post, "https://m.cgv.co.kr/WebAPP/Search/Default.aspx/GetMovieInfoList");
         getMovieListRequest.Content = new StringContent($"{{ pageIndex: '1', pageSize:'30', keyword: '{HttpUtility.UrlEncode(keyword)}'}}", Encoding.UTF8, "application/json");
-        var getMovieListResponse = await defaultClient.SendAsync(getMovieListRequest);
+        var getMovieListResponse = await _client.SendAsync(getMovieListRequest);
         getMovieListResponse.EnsureSuccessStatusCode();
         var obj = JObject.Parse(await getMovieListResponse.Content.ReadAsStringAsync());
 
@@ -227,39 +229,9 @@ public class CgvService
         return list.ToArray();
     }
 
-    public async Task<TheaterScheduleListRoot> GetScheduleListAsync(string theaterCode, DateTime date, string screenTypeCode = "02")
-    {
-        var request = new HttpRequestMessage(HttpMethod.Get, "https://m.cgv.co.kr/WebApp/Reservation/Schedule.aspx");
-        await defaultClient.SendAsync(request);
-
-        request = new HttpRequestMessage(HttpMethod.Post, "https://m.cgv.co.kr/WebAPP/Reservation/Common/ajaxTheaterScheduleList.aspx/GetTheaterScheduleList");
-        request.Headers.Add("Accept", "application/json, text/javascript, */*; q=0.01");
-        request.Headers.Add("Accept-Language", "ko-KR,ko;q=0.8,en-US;q=0.5,en;q=0.3");
-        request.Headers.Add("Origin", "https://m.cgv.co.kr");
-        request.Headers.Add("Cookie", "URL_PREV_COMMON=");
-        var body = new
-        {
-            strRequestType = "THEATER",
-            strUserID = "",
-            strMovieGroupCd = "",
-            strMovieTypeCd = "",
-            strPlayYMD = $"{date:yyyyMMdd}",
-            strTheaterCd = theaterCode,
-            strScreenTypeCd = screenTypeCode,
-            strRankType = "MOVIE",
-        };
-        request.Content = new StringContent(JsonConvert.SerializeObject(body), Encoding.UTF8, "application/json");
-
-        var response = await defaultClient.SendAsync(request);
-        var content = await response.Content.ReadAsStringAsync();
-        content = JObject.Parse(content)["d"].ToString();
-        var root = JsonConvert.DeserializeObject<TheaterScheduleListRoot>(content);
-        return root;
-    }
-
     private async Task<string> GetFanpageHtmlText(string movieIndex)
     {
-        var gateWayResponse = await defaultClient.GetAsync($"https://m.cgv.co.kr/WebApp/fanpage/Gateway.aspx?movieIdx={movieIndex}");
+        var gateWayResponse = await _client.GetAsync($"https://m.cgv.co.kr/WebApp/fanpage/Gateway.aspx?movieIdx={movieIndex}");
         var request = new HttpRequestMessage(HttpMethod.Post, $"https://moviestory.cgv.co.kr/fanpage/login");
         request.Headers.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0;) Chrome/120.0.0.0 Safari/537.36");
         request.Headers.Host = "moviestory.cgv.co.kr";
@@ -270,7 +242,7 @@ public class CgvService
             {"fanpageIsWebView","false" }
         });
         //request.Headers.Host = "moviestory.cgv.co.kr";
-        var response = await defaultClient.SendAsync(request);
+        var response = await _client.SendAsync(request);
         var content = await response.Content.ReadAsStringAsync();
         return content;
     }

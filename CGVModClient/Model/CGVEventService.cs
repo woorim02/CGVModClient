@@ -8,7 +8,7 @@ namespace CGVModClient.Model;
 public class CgvEventService
 {
     private readonly HttpClient _client;
-    private Aes _aes;
+    private readonly Aes _aes;
 
     public CgvEventService(HttpClient client, Aes aes) 
     {

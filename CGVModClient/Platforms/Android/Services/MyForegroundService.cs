@@ -65,14 +65,14 @@ public class MyForegroundService : Service
         var service = new CgvService();
         TheaterScheduleListRoot root;
         string[] days;
-        root = await service.GetScheduleListAsync("0013", DateTime.Now.AddDays(1));
+        root = await service.Reservation.GetScheduleListAsync("0013", DateTime.Now.AddDays(1));
         days = root.ResultSchedule.ListPlayYmd.Split('|');
         while (_isRunning && !cts.IsCancellationRequested)
         {
             try
             {
                 await Task.Delay(TimeSpan.FromSeconds(10), cts);
-                var nowRoot = await service.GetScheduleListAsync("0013", DateTime.Now.AddDays(1));
+                var nowRoot = await service.Reservation.GetScheduleListAsync("0013", DateTime.Now.AddDays(1));
                 var nowDays = nowRoot.ResultSchedule.ListPlayYmd.Split('|');
                 var diff = nowDays.Where(x =>
                 {
