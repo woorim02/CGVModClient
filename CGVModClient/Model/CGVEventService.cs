@@ -5,31 +5,24 @@ using System.Text;
 
 namespace CGVModClient.Model;
 
-public class CGVEventService
+public class CgvEventService
 {
-    private static readonly HttpClient client;
-    private static Aes aes;
+    private readonly HttpClient _client;
+    private Aes _aes;
 
-    static CGVEventService()
+    public CgvEventService(HttpClient client, Aes aes) 
     {
-        client = new HttpClient();
-        client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0;) Chrome/120.0.0.0 Safari/537.36");
-        client.DefaultRequestHeaders.Add("Referer", "ttps://m.cgv.co.kr/WebApp/EventNotiV4/eventMain.aspx");
-        client.DefaultRequestHeaders.Host = "m.cgv.co.kr";
-        client.DefaultRequestHeaders.Add("Origin", "https://m.cgv.co.kr");
-
-        aes = Aes.Create();
-        aes.IV = Convert.FromBase64String("YjUxMWM3MWI5M2E3NDhmNA==");
-        aes.Key = Convert.FromBase64String("YjUxMWM3MWI5M2E3NDhmNDc1YzM5YzY1ZGQwZTFlOTQ=");
+        _client = client;
+        _aes = aes;
+        _aes.IV = Convert.FromBase64String("YjUxMWM3MWI5M2E3NDhmNA==");
+        _aes.Key = Convert.FromBase64String("YjUxMWM3MWI5M2E3NDhmNDc1YzM5YzY1ZGQwZTFlOTQ=");
     }
-
-    public CGVEventService() { }
 
     public async Task<GiveawayEvent[]> GetGiveawayEventsAsync()
     {
         var request = new HttpRequestMessage(HttpMethod.Post, "https://m.cgv.co.kr/Event/GiveawayEventList.aspx/GetGiveawayEventList");
         request.Content = new StringContent("{theaterCode: '', pageNumber: '1', pageSize: '30'}", Encoding.UTF8, "application/json");
-        var response = await client.SendAsync(request);
+        var response = await _client.SendAsync(request);
         response.EnsureSuccessStatusCode();
 
         var content = await response.Content.ReadAsStringAsync();
@@ -65,7 +58,7 @@ public class CGVEventService
     {
         var request = new HttpRequestMessage(HttpMethod.Post, "https://m.cgv.co.kr/Event/GiveawayEventDetail.aspx/GetGiveawayEventDetail");
         request.Content = new StringContent($"{{eventIndex: '{eventIndex}', giveawayIndex: ''}}", Encoding.UTF8, "application/json");
-        var response = await client.SendAsync(request);
+        var response = await _client.SendAsync(request);
         response.EnsureSuccessStatusCode();
 
         var content = await response.Content.ReadAsStringAsync();
@@ -80,7 +73,7 @@ public class CGVEventService
     {
         var request = new HttpRequestMessage(HttpMethod.Post, "https://m.cgv.co.kr/Event/GiveawayEventDetail.aspx/GetGiveawayTheaterInfo");
         request.Content = new StringContent($"{{giveawayIndex: '{giveawayIndex}', areaCode: '{areaCode}'}}", Encoding.UTF8, "application/json");
-        var response = await client.SendAsync(request);
+        var response = await _client.SendAsync(request);
         response.EnsureSuccessStatusCode();
 
         string content = await response.Content.ReadAsStringAsync();
@@ -95,10 +88,10 @@ public class CGVEventService
         return info;
     }
 
-    private static string Decrypt(string data)
+    private string Decrypt(string data)
     {
         var bit = Convert.FromBase64String(data);
-        var decryptResult = aes.DecryptCbc(bit, aes.IV);
+        var decryptResult = _aes.DecryptCbc(bit, _aes.IV);
         return Encoding.UTF8.GetString(decryptResult);
     }
 }

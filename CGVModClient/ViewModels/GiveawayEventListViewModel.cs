@@ -7,14 +7,14 @@ namespace CGVModClient.ViewModels;
 
 public class GiveawayEventListViewModel : INotifyPropertyChanged
 {
-    CGVEventService eventService = new CGVEventService();
+    CgvService service = new CgvService();
 
     public string EventState { get; set; }
     public List<GiveawayEvent> GiveawayEventList { get; set;}
 
     public async Task LoadAsync()
     {
-        var arr = await eventService.GetGiveawayEventsAsync();
+        var arr = await service.Event.GetGiveawayEventsAsync();
         GiveawayEventList = new List<GiveawayEvent>(arr);
         SetEventState(GiveawayEventList.Count);
         OnPropertyChanged(nameof(GiveawayEventList));

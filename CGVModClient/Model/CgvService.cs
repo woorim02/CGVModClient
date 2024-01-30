@@ -15,9 +15,9 @@ public class CgvService
     private static HttpClient authClient;
     private static SocketsHttpHandler authHandler;
 
-    private static Aes aes;
-    private static SHA256 sha256;
-    private static MD5 md5;
+    private static Aes _aes;
+    private static SHA256 _sha256;
+    private static MD5 _md5;
 
     static CgvService()
     {
@@ -38,67 +38,23 @@ public class CgvService
         authClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0;) Chrome/120.0.0.0 Safari/537.36");
         authClient.DefaultRequestHeaders.Host = "m.cgv.co.kr";
 
-        aes = Aes.Create();
-        aes.IV = Convert.FromBase64String("YjUxMWM3MWI5M2E3NDhmNA==");
-        aes.Key = Convert.FromBase64String("YjUxMWM3MWI5M2E3NDhmNDc1YzM5YzY1ZGQwZTFlOTQ=");
-        sha256 = SHA256.Create();
-        md5 = MD5.Create();
+        _aes = Aes.Create();
+        _aes.IV = Convert.FromBase64String("YjUxMWM3MWI5M2E3NDhmNA==");
+        _aes.Key = Convert.FromBase64String("YjUxMWM3MWI5M2E3NDhmNDc1YzM5YzY1ZGQwZTFlOTQ=");
+        _sha256 = SHA256.Create();
+        _md5 = MD5.Create();
     }
+
+    public CgvEventService Event { get; private set; }
+    public CgvAuthService Auth { get; private set; }
 
     public CgvService()
     {
-    
+        Event = new CgvEventService(defaultClient, _aes);
+        Auth = new CgvAuthService(authClient, authHandler, _aes, _sha256, _md5);
     }
 
-    public async Task<bool> LoginAsync(string id, string password)
-    {
-        var getCookieResponse = await authClient.GetAsync("https://m.cgv.co.kr/Webapp/Member/Login.aspx");
-        getCookieResponse.EnsureSuccessStatusCode();
-        var checkIpResponse = await authClient.GetAsync("https://m.cgv.co.kr/WebAPP/Member/Login.aspx/CheckIP");
-        checkIpResponse.EnsureSuccessStatusCode();
-        var captchaResponse = await authClient.GetAsync("https://m.cgv.co.kr/WebAPP/Member/Login.aspx/InputCheckCaptcha");
-        checkIpResponse?.EnsureSuccessStatusCode();
 
-        var request = new HttpRequestMessage(HttpMethod.Post, "https://m.cgv.co.kr/Webapp/Member/Login.aspx");
-        var form = new Dictionary<string, string>()
-        {
-            { "hfUserId", Uri.EscapeDataString(Encrypt(id.Trim())) },
-            { "hfPasswordInter", Uri.EscapeDataString(ComputeSha256Hash(password)) },
-            { "hfPasswordLocal", Uri.EscapeDataString(ComputeSha256Hash(ComputeMD5Hash(password))) },
-            { "hfReUrl", Uri.EscapeDataString(Encrypt("https %3a%2f%2fm.cgv.co.kr%2f")) },
-            { "hfAgree", Uri.EscapeDataString(Encrypt("1")) },
-            { "nonmemberStateCd", Uri.EscapeDataString(Encrypt("0")) }
-        };
-        request.Content = new FormUrlEncodedContent(form);
-
-        var response = await authClient.SendAsync(request);
-        var content = await response.Content.ReadAsStringAsync();
-        if (content.Contains("ID 또는 비밀번호가 일치하지 않습니다"))
-            return false;
-
-        var document = new HtmlAgilityPack.HtmlDocument();
-        document.LoadHtml(content);
-        var uri = document.DocumentNode.FirstChild.Attributes["src"].Value;
-        var setCookieResponse = authClient.GetAsync(uri);
-
-        return true;
-    }
-
-    public async Task SaveAuthStateAsync()
-    {
-        var json = JsonConvert.SerializeObject(authHandler.CookieContainer.GetAllCookies());
-        await File.WriteAllTextAsync(Environment.CurrentDirectory + "\\cookie.json", json);
-    }
-
-    public async Task LoadAuthStateAsync()
-    {
-        var json = await File.ReadAllTextAsync(Environment.CurrentDirectory + "\\cookie.json");
-        var cookies = JsonConvert.DeserializeObject<CookieCollection>(json);
-        foreach (Cookie item in cookies)
-        {
-            authHandler.CookieContainer.Add(item);
-        }
-    }
 
     public async Task<Area[]> GetAreasAsync()
     {
@@ -365,29 +321,5 @@ public class CgvService
             }
         }
         return movies;
-    }
-
-    private static string Encrypt(string data)
-    {
-        var bit = Encoding.UTF8.GetBytes(data);
-        var encryptResult = aes.EncryptCbc(bit, aes.IV);
-        return Convert.ToBase64String(encryptResult);
-    }
-
-    private static string Decrypt(string data)
-    {
-        var bit = Convert.FromBase64String(data);
-        var decryptResult = aes.DecryptCbc(bit, aes.IV);
-        return Encoding.UTF8.GetString(decryptResult);
-    }
-
-    private static string ComputeSha256Hash(string data)
-    {
-        return Convert.ToHexString(sha256.ComputeHash(Encoding.UTF8.GetBytes(data))).ToLower();
-    }
-
-    private static string ComputeMD5Hash(string data)
-    {
-        return Convert.ToHexString(md5.ComputeHash(Encoding.UTF8.GetBytes(data))).ToLower();
     }
 }

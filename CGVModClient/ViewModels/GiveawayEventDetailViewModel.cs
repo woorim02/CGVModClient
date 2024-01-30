@@ -5,7 +5,7 @@ namespace CGVModClient.ViewModels;
 
 public class GiveawayEventDetailViewModel : INotifyPropertyChanged
 {
-    CGVEventService eventService = new CGVEventService();
+    CgvService service = new CgvService();
     private string title;
     private string description;
     private GiveawayEventModel eventModel;
@@ -30,13 +30,13 @@ public class GiveawayEventDetailViewModel : INotifyPropertyChanged
 
     public async Task GetTheaterInfoAsync(string areacode)
     {
-        TheaterInfo = await eventService.GetGiveawayTheaterInfoAsync(EventModel.GiveawayIndex, areacode);
+        TheaterInfo = await service.Event.GetGiveawayTheaterInfoAsync(EventModel.GiveawayIndex, areacode);
     }
 
     public async Task LoadAsync(string eventIndex)
     {
-        EventModel = await eventService.GetGiveawayEventModelAsync(eventIndex);
-        var task = eventService.GetGiveawayTheaterInfoAsync(EventModel.GiveawayIndex);
+        EventModel = await service.Event.GetGiveawayEventModelAsync(eventIndex);
+        var task = service.Event.GetGiveawayTheaterInfoAsync(EventModel.GiveawayIndex);
         var delayTask = Task.Delay(300);
         Title = EventModel.Title;
         description = EventModel.Contents;
