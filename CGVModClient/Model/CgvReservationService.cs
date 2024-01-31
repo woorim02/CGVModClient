@@ -51,4 +51,32 @@ public class CgvReservationService
         var root = JsonConvert.DeserializeObject<TheaterScheduleListRoot>(content);
         return root;
     }
+
+    public async Task<MiniMapDataRoot> GetMiniMapDataAsync(Schedule schedule)
+    {
+        var json = new
+        {
+            movieAttrCd = schedule.MovieAttrCd,
+            movieAttrNm = schedule.MovieAttrNm,
+            movieCd = schedule.MovieCd,
+            movieGroupCd = schedule.MovieGroupCd,
+            movieRatingCd = schedule.MovieRatingCd,
+            playNum = schedule.PlayNum,
+            playStartTm = schedule.PlayStartTm,
+            playYMD = schedule.PlayYmd,
+            requestType = "01",
+            screenCd = schedule.ScreenCd,
+            screenRatingCd = schedule.ScreenRatingCd,
+            seatRemainRate = schedule.SeatRate,
+            theaterCd = schedule.TheaterCd,
+            userId = ""
+        };
+        var request = new HttpRequestMessage(HttpMethod.Post, "https://m.cgv.co.kr/WebAPP/Reservation/Common/ajaxMovieMiniMapData.aspx/GetMiniMapData");
+        request.Content = new StringContent(JsonConvert.SerializeObject(json), Encoding.UTF8, "application/json");
+        var response = await _client.SendAsync(request);
+        var content = await response.Content.ReadAsStringAsync();
+        content = JObject.Parse(content)["d"].ToString();
+        var root = JsonConvert.DeserializeObject<MiniMapDataRoot>(content);
+        return root;
+    }
 }
