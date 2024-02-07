@@ -1,8 +1,6 @@
 ﻿using HtmlAgilityPack;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Net;
-using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
@@ -12,20 +10,18 @@ namespace CGVModClient.Model;
 public class CgvService
 {
     private static HttpClient _client;
+    private static SocketsHttpHandler _handler;
     private static HttpClient _authClient;
     private static SocketsHttpHandler _authHandler;
 
-    private static Aes _aes;
-    private static SHA256 _sha256;
-    private static MD5 _md5;
-
     static CgvService()
     {
-        _client = new HttpClient(new SocketsHttpHandler()
+        _handler = new SocketsHttpHandler()
         {
             UseCookies = true,
             CookieContainer = new CookieContainer()
-        });
+        };
+        _client = new HttpClient(_handler);
         _client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0;) Chrome/120.0.0.0 Safari/537.36");
         _client.DefaultRequestHeaders.Host = "m.cgv.co.kr";
 
@@ -37,12 +33,6 @@ public class CgvService
         _authClient = new HttpClient(_authHandler);
         _authClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0;) Chrome/120.0.0.0 Safari/537.36");
         _authClient.DefaultRequestHeaders.Host = "m.cgv.co.kr";
-
-        _aes = Aes.Create();
-        _aes.IV = Convert.FromBase64String("YjUxMWM3MWI5M2E3NDhmNA==");
-        _aes.Key = Convert.FromBase64String("YjUxMWM3MWI5M2E3NDhmNDc1YzM5YzY1ZGQwZTFlOTQ=");
-        _sha256 = SHA256.Create();
-        _md5 = MD5.Create();
     }
 
     public CgvEventService Event { get; private set; }
@@ -51,12 +41,10 @@ public class CgvService
 
     public CgvService()
     {
-        Event = new CgvEventService(_client, _aes);
-        Auth = new CgvAuthService(_authClient, _authHandler, _aes, _sha256, _md5);
-        Reservation = new CgvReservationService(_client, _authClient);
+        Event = new CgvEventService(_client);
+        Auth = new CgvAuthService(_authClient, _authHandler);
+        Reservation = new CgvReservationService(_client, _handler, _authClient, _authHandler);
     }
-
-
 
     public async Task<Area[]> GetAreasAsync()
     {

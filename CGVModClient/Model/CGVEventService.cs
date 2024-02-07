@@ -1,21 +1,16 @@
 ﻿using HtmlAgilityPack;
 using Newtonsoft.Json.Linq;
-using System.Security.Cryptography;
 using System.Text;
 
 namespace CGVModClient.Model;
 
-public class CgvEventService
+public class CgvEventService : CgvServiceBase
 {
     private readonly HttpClient _client;
-    private readonly Aes _aes;
 
-    public CgvEventService(HttpClient client, Aes aes) 
+    public CgvEventService(HttpClient client) 
     {
         _client = client;
-        _aes = aes;
-        _aes.IV = Convert.FromBase64String("YjUxMWM3MWI5M2E3NDhmNA==");
-        _aes.Key = Convert.FromBase64String("YjUxMWM3MWI5M2E3NDhmNDc1YzM5YzY1ZGQwZTFlOTQ=");
     }
 
     public async Task<GiveawayEvent[]> GetGiveawayEventsAsync()
@@ -86,12 +81,5 @@ public class CgvEventService
             item.GiveawayRemainCount = Decrypt(item.EncCount);
         }
         return info;
-    }
-
-    private string Decrypt(string data)
-    {
-        var bit = Convert.FromBase64String(data);
-        var decryptResult = _aes.DecryptCbc(bit, _aes.IV);
-        return Encoding.UTF8.GetString(decryptResult);
     }
 }

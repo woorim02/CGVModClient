@@ -1,22 +1,22 @@
-﻿using Newtonsoft.Json.Linq;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace CGVModClient.Model;
 
-public class CgvReservationService
+public class CgvReservationService : CgvServiceBase
 {
     private readonly HttpClient _client;
+    private readonly SocketsHttpHandler _handler;
     private readonly HttpClient _authClient;
+    private readonly SocketsHttpHandler _authHandler;
 
-    public CgvReservationService(HttpClient defaultClient, HttpClient authClient)
+    public CgvReservationService(HttpClient client, SocketsHttpHandler handler, HttpClient authClient, SocketsHttpHandler authHandler)
     {
-        _client = defaultClient;
+        _client = client;
+        _handler = handler;
         _authClient = authClient;
+        _authHandler = authHandler;
     }
 
     public async Task<TheaterScheduleListRoot?> GetScheduleListAsync(string theaterCode, DateTime date, string screenTypeCode = "02")
