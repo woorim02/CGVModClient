@@ -69,16 +69,19 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Compile Update="Pages\BookingOpenNotificationAddPage.xaml.cs">
-	    <DependentUpon>BookingOpenNotificationAddPage.xaml</DependentUpon>
+	  <Compile Update="Pages\OpenNotificationAddPage.xaml.cs">
+	    <DependentUpon>OpenNotificationAddPage.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Pages\OpenNotificationSettingPage.xaml.cs">
+	    <DependentUpon>OpenNotificationSettingPage.xaml</DependentUpon>
 	  </Compile>
 	</ItemGroup>
 
 	<ItemGroup>
-	  <MauiXaml Update="Pages\BookingOpenNotificationAddPage.xaml">
+	  <MauiXaml Update="Pages\OpenNotificationAddPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Pages\BookingOpenNotificationSettingPage.xaml">
+	  <MauiXaml Update="Pages\OpenNotificationSettingPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Pages\GiveawayEventDetailPage.xaml">

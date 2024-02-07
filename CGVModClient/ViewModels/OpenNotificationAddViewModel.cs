@@ -4,7 +4,7 @@ using System.ComponentModel;
 
 namespace CGVModClient.ViewModels;
 
-public partial class BookingOpenNotificationAddViewModel : ObservableObject, IViewModel
+public partial class OpenNotificationAddViewModel : ObservableObject
 {
     [ObservableProperty]
     Movie? movie;
@@ -15,15 +15,15 @@ public partial class BookingOpenNotificationAddViewModel : ObservableObject, IVi
     [ObservableProperty]
     DateTime? targetDate;
 
-    public BookingOpenNotificationInfo Info { get; set; }
+    public OpenNotificationInfo Info { get; set; }
 
-    public BookingOpenNotificationAddViewModel() 
+    public OpenNotificationAddViewModel() 
     {
         targetDate = DateTime.Now.AddDays(1);
-        Info = new BookingOpenNotificationInfo();
+        Info = new OpenNotificationInfo();
     }
 
-    public async Task LoadAsync()
+    public void Load()
     {
 
     }

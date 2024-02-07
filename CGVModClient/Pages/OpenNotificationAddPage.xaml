@@ -3,8 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:cgv_viewmodel="clr-namespace:CGVModClient.ViewModels"
-             x:Class="CGVModClient.Pages.BookingOpenNotificationAddPage"
-             x:DataType="cgv_viewmodel:BookingOpenNotificationAddViewModel"
+             x:Class="CGVModClient.Pages.OpenNotificationAddPage"
+             x:DataType="cgv_viewmodel:OpenNotificationAddViewModel"
               Title="예매 오픈 알림 추가">
 
     <Grid RowDefinitions="1*,100">
@@ -17,7 +17,7 @@
                     TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"/>
             <Button x:Name="MovieFormatButton"
                     ImageSource="https://img.cgv.co.kr/WebApp/images/reservation/schedule/btn_filter_check.png"
-                    Text="{Binding MovieFormat, TargetNullValue='2D'}"
+                    Text="{Binding MovieFormat, TargetNullValue='IMAX'}"
                     Clicked="MovieFormatButton_Clicked"
                     Background="White"
                     TextColor="Black"

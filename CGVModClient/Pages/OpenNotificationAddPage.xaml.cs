@@ -2,16 +2,16 @@ using CommunityToolkit.Maui.Views;
 
 namespace CGVModClient.Pages;
 
-public partial class BookingOpenNotificationAddPage : ContentPage
+public partial class OpenNotificationAddPage : ContentPage
 {
-    BookingOpenNotificationAddViewModel viewModel;
-	public BookingOpenNotificationAddPage()
+    OpenNotificationAddViewModel viewModel;
+	public OpenNotificationAddPage()
 	{
 		InitializeComponent();
-        viewModel = new BookingOpenNotificationAddViewModel();
+        viewModel = new OpenNotificationAddViewModel();
         BindingContext = viewModel;
         datePicker.MinimumDate = DateTime.Now;
-        datePicker.MaximumDate = DateTime.Now.AddMonths(1);
+        datePicker.MaximumDate = DateTime.Now.AddMonths(2);
 	}
 
     private async void TitleButton_Clicked(object sender, EventArgs e)

@@ -1,13 +1,13 @@
 namespace CGVModClient.Pages;
 
-public partial class BookingOpenNotificationSettingPage : ContentPage
+public partial class OpenNotificationSettingPage : ContentPage
 {
-    BookingOpenNotificationSettingViewModel viewModel;
+    OpenNotificationSettingViewModel viewModel;
 
-    public BookingOpenNotificationSettingPage()
+    public OpenNotificationSettingPage()
     {
         InitializeComponent();
-        viewModel = new BookingOpenNotificationSettingViewModel();
+        viewModel = new OpenNotificationSettingViewModel();
         BindingContext = viewModel;
     }
 
@@ -18,7 +18,6 @@ public partial class BookingOpenNotificationSettingPage : ContentPage
 
     private async void AddNotificationButton_Clicked(object sender, EventArgs e)
     {
-        var popup = new BookingOpenNotificationAddPage();
         await AppShell.Current.GoToAsync("BookingOpenNotificationAddPage");
     }
 }

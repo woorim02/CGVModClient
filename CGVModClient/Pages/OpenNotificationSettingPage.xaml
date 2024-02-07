@@ -2,8 +2,8 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:cgv_viewmodels="clr-namespace:CGVModClient.ViewModels"
-             x:Class="CGVModClient.Pages.BookingOpenNotificationSettingPage"
-             x:DataType="cgv_viewmodels:BookingOpenNotificationSettingViewModel"
+             x:Class="CGVModClient.Pages.OpenNotificationSettingPage"
+             x:DataType="cgv_viewmodels:OpenNotificationSettingViewModel"
              Title="예매 오픈 알림 설정"
              Loaded="ContentPage_Loaded">
     <ContentPage.Resources>
