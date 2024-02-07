@@ -1,5 +1,6 @@
 ﻿global using CGVModClient.Data;
 global using CGVModClient.Data.Json;
+global using CGVModClient.Database;
 global using CGVModClient.Model;
 global using CGVModClient.Pages;
 global using CGVModClient.Popup;

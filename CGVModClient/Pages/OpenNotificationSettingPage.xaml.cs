@@ -4,14 +4,14 @@ public partial class OpenNotificationSettingPage : ContentPage
 {
     OpenNotificationSettingViewModel viewModel;
 
-    public OpenNotificationSettingPage()
+    public OpenNotificationSettingPage(AppDatabase database)
     {
         InitializeComponent();
-        viewModel = new OpenNotificationSettingViewModel();
+        viewModel = new OpenNotificationSettingViewModel(database);
         BindingContext = viewModel;
     }
 
-    private async void ContentPage_Loaded(object sender, EventArgs e)
+    private async void ContentPage_Appearing(object sender, EventArgs e)
     {
         await viewModel.LoadAsync();
     }

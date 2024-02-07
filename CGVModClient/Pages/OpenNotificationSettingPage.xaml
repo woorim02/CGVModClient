@@ -5,7 +5,7 @@
              x:Class="CGVModClient.Pages.OpenNotificationSettingPage"
              x:DataType="cgv_viewmodels:OpenNotificationSettingViewModel"
              Title="예매 오픈 알림 설정"
-             Loaded="ContentPage_Loaded">
+             Appearing="ContentPage_Appearing">
     <ContentPage.Resources>
         <Style x:Key="MyBorder" TargetType="Border">
             <Setter Property="Stroke" Value="LightGray"/>

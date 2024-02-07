@@ -17,7 +17,7 @@
                     TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"/>
             <Button x:Name="MovieFormatButton"
                     ImageSource="https://img.cgv.co.kr/WebApp/images/reservation/schedule/btn_filter_check.png"
-                    Text="{Binding MovieFormat, TargetNullValue='IMAX'}"
+                    Text="{Binding MovieFormat, TargetNullValue='2D'}"
                     Clicked="MovieFormatButton_Clicked"
                     Background="White"
                     TextColor="Black"
@@ -45,6 +45,7 @@
                 HeightRequest="30"
                 Padding="0"
                 Text="저장"
+                Command="{Binding ConfirmCommand}"
                 Clicked="ConfirmButton_Clicked"
                 Background="{StaticResource DefaultBackgroundBrush}"/>
     </Grid>

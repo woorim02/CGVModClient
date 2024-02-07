@@ -1,5 +1,6 @@
 ﻿
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using System.ComponentModel;
 
 namespace CGVModClient.ViewModels;
@@ -13,18 +14,30 @@ public partial class OpenNotificationAddViewModel : ObservableObject
     [ObservableProperty]
     Theater? theater;
     [ObservableProperty]
-    DateTime? targetDate;
+    DateTime targetDate;
 
-    public OpenNotificationInfo Info { get; set; }
+    AppDatabase database;
 
-    public OpenNotificationAddViewModel() 
+    public OpenNotificationAddViewModel(AppDatabase database) 
     {
         targetDate = DateTime.Now.AddDays(1);
-        Info = new OpenNotificationInfo();
+        movieFormat = "IMAX";//Todo
+        this.database = database;
     }
 
-    public void Load()
+    [RelayCommand]
+    private async Task Confirm()
     {
+        if (Movie != null && MovieFormat != null && Theater != null)
+            return;
 
+        var info = new OpenNotificationInfo()
+        {
+            Movie = Movie,
+            ScreenType = MovieFormat,
+            Theater = Theater,
+            TargetDate = TargetDate
+        };
+        await database.SaveOpenNotificationInfoAsync(info);
     }
 }

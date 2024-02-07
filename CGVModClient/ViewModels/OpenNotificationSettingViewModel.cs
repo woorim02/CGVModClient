@@ -5,9 +5,13 @@ using System.Runtime.CompilerServices;
 
 namespace CGVModClient.ViewModels;
 
-public class OpenNotificationSettingViewModel : ObservableObject, IViewModel
+public partial class OpenNotificationSettingViewModel : ObservableObject, IViewModel
 {
-    private bool IsOpenNotificationEnabled {
+    private AppDatabase _database;
+
+    [ObservableProperty]
+    private List<OpenNotificationInfo> infos;
+    public bool IsOpenNotificationEnabled {
         get => Preferences.Get("IsOpenNotificationEnabled", false);
         set { 
             Preferences.Set("IsOpenNotificationEnabled", value);
@@ -15,10 +19,13 @@ public class OpenNotificationSettingViewModel : ObservableObject, IViewModel
         }
     }
 
-    public ObservableCollection<OpenNotificationInfo> Infos { get; set; }
+    public OpenNotificationSettingViewModel(AppDatabase database)
+    {
+        _database = database;
+    }
 
     public async Task LoadAsync()
     {
-        
+        Infos = await _database.GetOpenNotificationInfosAsync();
     }
 }

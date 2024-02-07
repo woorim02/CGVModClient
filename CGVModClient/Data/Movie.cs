@@ -1,7 +1,11 @@
-﻿namespace CGVModClient.Data;
+﻿using SQLite;
 
+namespace CGVModClient.Data;
+
+[Table(nameof(Movie))]
 public class Movie
 {
+    [PrimaryKey]
     public string Index { get; set; }
     public string Title { get; set;}
     public string ThumbnailSource { get; set;}
@@ -19,5 +23,6 @@ public class Movie
     /// <remarks>
     /// <c>null</c>
     /// </remarks>
+    [Ignore]
     public string[]? ScreenTypes { get; set;}
 }

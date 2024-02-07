@@ -1,7 +1,11 @@
-﻿namespace CGVModClient.Data;
+﻿using SQLite;
 
+namespace CGVModClient.Data;
+
+[Table(nameof(Theater))]
 public class Theater
 {
+    [PrimaryKey]
     public string TheaterCode { get; init; }
     public string TheaterName { get; init; }
     public string CountTypeCode { get; init; }

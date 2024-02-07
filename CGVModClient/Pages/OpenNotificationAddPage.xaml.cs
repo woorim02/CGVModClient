@@ -5,10 +5,10 @@ namespace CGVModClient.Pages;
 public partial class OpenNotificationAddPage : ContentPage
 {
     OpenNotificationAddViewModel viewModel;
-	public OpenNotificationAddPage()
+	public OpenNotificationAddPage(AppDatabase database)
 	{
 		InitializeComponent();
-        viewModel = new OpenNotificationAddViewModel();
+        viewModel = new OpenNotificationAddViewModel(database);
         BindingContext = viewModel;
         datePicker.MinimumDate = DateTime.Now;
         datePicker.MaximumDate = DateTime.Now.AddMonths(2);
@@ -40,6 +40,6 @@ public partial class OpenNotificationAddPage : ContentPage
 
     private void ConfirmButton_Clicked(object sender, EventArgs e)
     {
-
+        Navigation.RemovePage(this);
     }
 }
