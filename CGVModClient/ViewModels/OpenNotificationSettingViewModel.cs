@@ -1,7 +1,9 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
+﻿#if ANDROID
+using Android.App;
+using Android.Content;
+using CGVModClient.Platforms.Android.Services;
+#endif
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace CGVModClient.ViewModels;
 
@@ -26,6 +28,18 @@ public partial class OpenNotificationSettingViewModel : ObservableObject, IViewM
 
     public async Task LoadAsync()
     {
+#if ANDROID
+        ActivityManager manager = (ActivityManager)Android.App.Application.Context.GetSystemService(Context.ActivityService);
+        var services = manager.GetRunningServices(int.MaxValue);
+        foreach (var service in services)
+        {
+            if (service.Service.ClassName.Contains(nameof(MyForegroundService)))
+            {
+                IsOpenNotificationEnabled = true;
+                break;
+            }
+        }
+#endif
         Infos = await _database.GetOpenNotificationInfosAsync();
     }
 }

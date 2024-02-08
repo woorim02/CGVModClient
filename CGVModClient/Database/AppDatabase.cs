@@ -1,4 +1,5 @@
 ﻿using SQLite;
+using SQLiteNetExtensions.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,7 @@ namespace CGVModClient.Database
     public class AppDatabase
     {
         SQLiteAsyncConnection database;
-
+        SQLiteConnection connection;
         public AppDatabase()
         {
         }
@@ -20,6 +21,7 @@ namespace CGVModClient.Database
             if (database is not null)
                 return;
             database = new SQLiteAsyncConnection(Constants.AppDatabasePath, Constants.AppDatabaseFlags);
+            connection = new SQLiteConnection(Constants.AppDatabasePath, Constants.AppDatabaseFlags);
             await database.CreateTableAsync<Movie>();
             await database.CreateTableAsync<Theater>();
             var result = await database.CreateTableAsync<OpenNotificationInfo>();
@@ -28,13 +30,18 @@ namespace CGVModClient.Database
         public async Task<List<OpenNotificationInfo>> GetOpenNotificationInfosAsync()
         {
             await Init();
-            return await database.Table<OpenNotificationInfo>().ToListAsync();
+            return connection.GetAllWithChildren<OpenNotificationInfo>();
         }
 
         public async Task SaveOpenNotificationInfoAsync(OpenNotificationInfo info)
         {
             await Init();
             await database.InsertAsync(info);
+        }
+
+        public async Task InsertOrReplaceAsync<T>(T item)
+        {
+            await database.InsertOrReplaceAsync(item);
         }
     }
 }
