@@ -1,5 +1,4 @@
 ﻿using SQLite;
-using SQLiteNetExtensions.Attributes;
 
 namespace CGVModClient.Data;
 
@@ -7,18 +6,18 @@ namespace CGVModClient.Data;
 public class OpenNotificationInfo
 {
     private string movieIndex;
-
+    private string theaterCode;
     [PrimaryKey, AutoIncrement]
     public int Id { get; set; }
 
-    [ForeignKey(typeof(Movie))]
-    public string MovieIndex { get => Movie.Index; set => movieIndex = value; }
-    [ManyToOne(CascadeOperations = CascadeOperation.All)]
-    public Movie Movie { get; set; }
+    public string MovieIndex { get => Movie?.Index ?? movieIndex; set => movieIndex = value; }
+    [Ignore]
+    public Movie? Movie { get; set; }
 
     public string ScreenType { get; set; }
 
-    [ManyToOne]
+    public string TheaterCode { get => Theater?.TheaterCode ?? theaterCode; set => theaterCode = value; }
+    [Ignore]
     public Theater Theater { get; set; }
 
     public DateTime TargetDate { get; set; }

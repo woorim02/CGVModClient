@@ -8,7 +8,7 @@ public partial class OpenNotificationAddPage : ContentPage
 	public OpenNotificationAddPage(AppDatabase database)
 	{
 		InitializeComponent();
-        viewModel = new OpenNotificationAddViewModel(database);
+        viewModel = new OpenNotificationAddViewModel(database, () => Navigation.RemovePage(this));
         BindingContext = viewModel;
         datePicker.MinimumDate = DateTime.Now;
         datePicker.MaximumDate = DateTime.Now.AddMonths(2);
@@ -36,10 +36,5 @@ public partial class OpenNotificationAddPage : ContentPage
         {
             viewModel.Theater = theater;
         }
-    }
-
-    private void ConfirmButton_Clicked(object sender, EventArgs e)
-    {
-        Navigation.RemovePage(this);
     }
 }

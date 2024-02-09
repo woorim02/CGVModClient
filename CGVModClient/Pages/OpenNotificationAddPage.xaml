@@ -46,7 +46,6 @@
                 Padding="0"
                 Text="저장"
                 Command="{Binding ConfirmCommand}"
-                Clicked="ConfirmButton_Clicked"
                 Background="{StaticResource DefaultBackgroundBrush}"/>
     </Grid>
 </ContentPage>

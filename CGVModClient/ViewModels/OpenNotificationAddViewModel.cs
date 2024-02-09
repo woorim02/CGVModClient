@@ -17,19 +17,27 @@ public partial class OpenNotificationAddViewModel : ObservableObject
     DateTime targetDate;
 
     AppDatabase database;
+    Action ClosePage { get; set; }
 
-    public OpenNotificationAddViewModel(AppDatabase database) 
+    public OpenNotificationAddViewModel(AppDatabase database, Action closePage) 
     {
         targetDate = DateTime.Now.AddDays(1);
         movieFormat = "IMAX";//Todo
         this.database = database;
+        ClosePage = closePage;
     }
 
     [RelayCommand]
     private async Task Confirm()
     {
-        if (!(Movie != null && MovieFormat != null && Theater != null))
+        if (Theater == null) {
+            await Application.Current.MainPage.DisplayAlert("알림 설정", "극장을 선택해 주세요", "확인");
             return;
+        }
+        if (MovieFormat == null) {
+            await Application.Current.MainPage.DisplayAlert("알림 설정", "영화 포맷을 선택해 주세요", "확인");
+            return;
+        }
 
         var info = new OpenNotificationInfo()
         {
@@ -38,15 +46,8 @@ public partial class OpenNotificationAddViewModel : ObservableObject
             Theater = Theater,
             TargetDate = TargetDate
         };
-        try
-        {
-            await database.SaveOpenNotificationInfoAsync(info);
-            await database.InsertOrReplaceAsync(info.Movie);
-            await database.InsertOrReplaceAsync(info.Theater);
-        }catch(Exception ex)
-        {
-            await Application.Current.MainPage.DisplayAlert("Error", ex.ToString(), "확인");
-        }
+        await database.SaveOpenNotificationInfoAsync(info);
+        ClosePage();
         return;
     }
 }
