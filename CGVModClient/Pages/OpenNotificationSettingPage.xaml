@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:cgv_viewmodels="clr-namespace:CGVModClient.ViewModels"
+             xmlns:cgv_data="clr-namespace:CGVModClient.Data"
              x:Class="CGVModClient.Pages.OpenNotificationSettingPage"
              x:DataType="cgv_viewmodels:OpenNotificationSettingViewModel"
              Title="예매 오픈 알림 설정"
@@ -25,17 +26,23 @@
                         IsToggled="{Binding IsOpenNotificationEnabled, Mode=TwoWay}"/>
             </Grid>
         </Border>
-        <ListView Grid.Row="1" CachingStrategy="RecycleElement">
+        <ListView Grid.Row="1"
+                  ItemsSource="{Binding Infos}"
+                  SelectionMode="None"
+                  HasUnevenRows="True"
+                  ItemTapped="ListView_ItemTapped">
             <ListView.ItemTemplate>
-                <DataTemplate>
+                <DataTemplate x:DataType="cgv_data:OpenNotificationInfo">
                     <ViewCell>
-                        <Grid ColumnDefinitions="200,1*"
-                              HeightRequest="120">
-                            <Image Grid.Column="0"/>
-                            <Grid>
-                                <Label Grid.Row="0"/>
-                                <Label Grid.Row="1"/>
-                                <Label Grid.Row="2"/>
+                        <Grid ColumnDefinitions="50,1*"
+                              HeightRequest="80"
+                              Margin="4">
+                            <Image Grid.Column="0" Source="{Binding Movie.ThumbnailSource}" Margin="5"/>
+                            <Grid Grid.Column="1" RowDefinitions="1*,1*,1*,1*">
+                                <Label Grid.Row="0" Text="{Binding Movie.Title}"/>
+                                <Label Grid.Row="1" Text="{Binding ScreenType}"/>
+                                <Label Grid.Row="2" Text="{Binding Theater.TheaterName}"/>
+                                <Label Grid.Row="3" Text="{Binding TargetDate, StringFormat='{0:yyyy-MM-dd}'}"/>
                             </Grid>
                         </Grid>
                     </ViewCell>

@@ -50,5 +50,11 @@ namespace CGVModClient.Database
                 await database.InsertOrReplaceAsync(info.Movie);
             await database.InsertOrReplaceAsync(info.Theater);
         }
+
+        public async Task DeleteOpenNotificationInfo(OpenNotificationInfo info)
+        {
+            await Init();
+            await database.DeleteAsync(info);
+        }
     }
 }

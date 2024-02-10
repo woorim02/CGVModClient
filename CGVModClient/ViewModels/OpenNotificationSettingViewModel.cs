@@ -42,4 +42,11 @@ public partial class OpenNotificationSettingViewModel : ObservableObject, IViewM
 #endif
         Infos = await _database.GetOpenNotificationInfosAsync();
     }
+
+    public async Task RemoveOpenNotificationInfo(OpenNotificationInfo info)
+    {
+        Infos.Remove(info);
+        OnPropertyChanged(nameof(Infos));
+        await _database.DeleteOpenNotificationInfo(info);
+    }
 }
