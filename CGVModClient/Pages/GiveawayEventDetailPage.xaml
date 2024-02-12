@@ -6,6 +6,7 @@
              xmlns:cgv_data="clr-namespace:CGVModClient.Data"
              x:Class="CGVModClient.Pages.GiveawayEventDetailPage"
              x:DataType="cgv_viewmodels:GiveawayEventDetailViewModel"
+             Title="{Binding Title,Mode=OneWay}"
              Loaded="ContentPage_Loaded">
     <ContentPage.Resources>
         <Style x:Key="MyBorder" TargetType="Border">
@@ -23,14 +24,16 @@
         </Style>
     </ContentPage.Resources>
     <Grid RowDefinitions="40,*">
-        <Border Grid.Row="0" 
-                Style="{StaticResource MyBorder}">
-            <Label Text="{Binding Title}"
-                   VerticalOptions="Center"/>
+        <ActivityIndicator Grid.Row="1" IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}"
+                           HeightRequest="40" WidthRequest="40" Margin="3"
+                           VerticalOptions="Start"/>
+        <Border Grid.Row="0" Style="{StaticResource MyBorder}">
+            <Label Text="{Binding Title}" VerticalOptions="Center"/>
         </Border>
         <ListView Grid.Row="1"
-                  x:Name="TheaterList"
-                  ItemsSource="{Binding TheaterInfo.TheaterList}"
+                  x:Name="TheatersListView"
+                  CachingStrategy="RecycleElementAndDataTemplate"
+                  ItemsSource="{Binding Theaters}"
                   SelectionMode="None">
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="cgv_data:Theater">

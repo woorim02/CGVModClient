@@ -1,33 +1,33 @@
 ﻿using CGVModClient.Data;
 using CGVModClient.Model;
+using CommunityToolkit.Mvvm.ComponentModel;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace CGVModClient.ViewModels;
 
-public class GiveawayEventListViewModel : INotifyPropertyChanged
+public partial class GiveawayEventListViewModel : ObservableObject
 {
     CgvService service = new CgvService();
-
-    public string EventState { get; set; }
-    public List<GiveawayEvent> GiveawayEventList { get; set;}
+    [ObservableProperty]
+    private bool isBusy;
+    [ObservableProperty]
+    private string eventState;
+    public ObservableCollection<GiveawayEvent> GiveawayEvents { get; set;}
 
     public async Task LoadAsync()
     {
+        IsBusy = true;
         var arr = await service.Event.GetGiveawayEventsAsync();
-        GiveawayEventList = new List<GiveawayEvent>(arr);
-        SetEventState(GiveawayEventList.Count);
-        OnPropertyChanged(nameof(GiveawayEventList));
-        OnPropertyChanged(nameof(EventState));
+        GiveawayEvents = new ObservableCollection<GiveawayEvent>(arr);
+        SetEventState(GiveawayEvents.Count);
+        OnPropertyChanged(nameof(GiveawayEvents));
+        IsBusy = false;
     }
 
     public void SetEventState(int count)
     {
         EventState = $"진행중인 경품 이벤트 {count}개";
     }
-
-    public event PropertyChangedEventHandler? PropertyChanged;
-
-    protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null) =>
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 }

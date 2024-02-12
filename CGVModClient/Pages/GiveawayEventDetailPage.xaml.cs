@@ -3,19 +3,18 @@ namespace CGVModClient.Pages;
 [QueryProperty(nameof(EventIndex), "eventIndex")]
 public partial class GiveawayEventDetailPage : ContentPage
 {
-	string eventIndex;
-	GiveawayEventDetailViewModel ViewModel { get; set; }
-    public string EventIndex { get => eventIndex; set => eventIndex = value; }
+    private GiveawayEventDetailViewModel viewModel;
+    public string EventIndex { get; set; }
 
     public GiveawayEventDetailPage() {
         InitializeComponent();
-        ViewModel = new GiveawayEventDetailViewModel();
-        BindingContext = ViewModel;
+        viewModel = new GiveawayEventDetailViewModel();
+        BindingContext = viewModel;
     }
 
     private async void ContentPage_Loaded(object sender, EventArgs e)
     {
-        await ViewModel.LoadAsync(eventIndex);
-        Title = ViewModel.Title;
+        await Task.Delay(300);
+        await viewModel.LoadAsync(EventIndex);
     }
 }

@@ -24,13 +24,15 @@
         </Style>
     </ContentPage.Resources>
     <Grid RowDefinitions="40,*">
-        <Border Grid.Row="0"
-                Style="{StaticResource MyBorder}">
-            <Label Text="{Binding EventState}"
-               VerticalOptions="Center"/>
+        <ActivityIndicator Grid.Row="1" IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}"
+                           HeightRequest="40" WidthRequest="40" Margin="3"
+                           VerticalOptions="Start"/>
+        <Border Grid.Row="0" Style="{StaticResource MyBorder}">
+            <Label Text="{Binding EventState}" VerticalOptions="Center"/>
         </Border>
         <ListView Grid.Row="1"
-                  ItemsSource="{Binding GiveawayEventList}"
+                  CachingStrategy="RecycleElementAndDataTemplate"
+                  ItemsSource="{Binding GiveawayEvents}"
                   ItemTapped="ListView_ItemTapped"
                   SelectionMode="None">
             <ListView.ItemTemplate>
