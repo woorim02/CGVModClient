@@ -11,4 +11,16 @@ public static class Constants
 
     public static string AppDatabasePath =>
         Path.Combine(FileSystem.AppDataDirectory, AppDatabaseFilename);
+
+    public static IReadOnlyDictionary<Type, string> PageRoutes { get; private set; }
+
+    static Constants()
+    {
+        PageRoutes = new Dictionary<Type, string>() {
+            {typeof(GiveawayEventListPage), "GiveawayEvent" },
+            {typeof(GiveawayEventDetailPage), "GiveawayEvent/Detail" },
+            {typeof(OpenNotificationSettingPage), "OpenNotification" },
+            {typeof(OpenNotificationAddPage), "OpenNotification/Add" },
+        };
+    }
 }

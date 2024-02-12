@@ -18,7 +18,7 @@ public partial class OpenNotificationSettingPage : ContentPage
 
     private async void AddNotificationButton_Clicked(object sender, EventArgs e)
     {
-        await AppShell.Current.GoToAsync("BookingOpenNotificationAddPage");
+        await AppShell.Current.GoToAsync($"{Constants.PageRoutes[typeof(OpenNotificationAddPage)]}");
     }
 
     private async void ListView_ItemTapped(object sender, ItemTappedEventArgs e)

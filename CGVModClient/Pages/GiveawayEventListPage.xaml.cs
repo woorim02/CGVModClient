@@ -19,6 +19,6 @@ public partial class GiveawayEventListPage : ContentPage
     private async void ListView_ItemTapped(object sender, ItemTappedEventArgs e)
     {
         var args = (GiveawayEvent)e.Item;
-        await Shell.Current.GoToAsync($"GiveawayEventDetailPage?eventIndex={args.EventIndex}");
+        await Shell.Current.GoToAsync($"{Constants.PageRoutes[typeof(GiveawayEventDetailPage)]}?eventIndex={args.EventIndex}");
     }
 }

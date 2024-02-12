@@ -9,16 +9,11 @@ public partial class MainPage : ContentPage
 
     private async void GoGiveawayEventListPageButton_Clicked(object sender, EventArgs e)
     {
-        await Shell.Current.GoToAsync($"GiveawayEventListPage");
+        await Shell.Current.GoToAsync(Constants.PageRoutes[typeof(GiveawayEventListPage)]);
     }
 
     private async void GoOpenNotificationButton_Clicked(object sender, EventArgs e)
     {
-        await Shell.Current.GoToAsync("BookingOpenNotificationSettingPage");
-    }
-
-    private async void YongsanIMAXOpenNotification_Clicked(object sender, EventArgs e)
-    {
-        await Shell.Current.GoToAsync("YongsanIMAXOpenNotificationPage");
+        await Shell.Current.GoToAsync(Constants.PageRoutes[typeof(OpenNotificationSettingPage)]);
     }
 }

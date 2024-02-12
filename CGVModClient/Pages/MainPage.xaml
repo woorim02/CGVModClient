@@ -10,8 +10,5 @@
         <Button x:Name="GoOpenNotificationButton"
                 Text="영화 예매 오픈 알림"
                 Clicked="GoOpenNotificationButton_Clicked"/>
-        <Button x:Name="YongsanIMAXOpenNotification"
-                Text="용아맥 오픈알림"
-                Clicked="YongsanIMAXOpenNotification_Clicked"/>
     </VerticalStackLayout>
 </ContentPage>

@@ -5,12 +5,9 @@
         public AppShell()
         {
             InitializeComponent();
-
-            Routing.RegisterRoute("GiveawayEventDetailPage", typeof(GiveawayEventDetailPage));
-            Routing.RegisterRoute("GiveawayEventListPage", typeof(GiveawayEventListPage));
-            Routing.RegisterRoute("BookingOpenNotificationSettingPage", typeof(OpenNotificationSettingPage));
-            Routing.RegisterRoute("BookingOpenNotificationAddPage", typeof(OpenNotificationAddPage));
-            Routing.RegisterRoute("YongsanIMAXOpenNotificationPage", typeof(YongsanIMAXOpenNotificationPage));
+            foreach(var item in Constants.PageRoutes) {
+                Routing.RegisterRoute(item.Value, item.Key);
+            }
         }
     }
 }
