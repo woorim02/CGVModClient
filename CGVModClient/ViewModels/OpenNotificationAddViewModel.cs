@@ -27,6 +27,7 @@ public partial class OpenNotificationAddViewModel : ObservableObject
         ClosePage = closePage;
     }
 
+#pragma warning disable CS8602 // Application.Current.MainPage == null 일 가능성 배제
     [RelayCommand]
     private async Task Confirm()
     {
@@ -38,6 +39,7 @@ public partial class OpenNotificationAddViewModel : ObservableObject
             await Application.Current.MainPage.DisplayAlert("알림 설정", "영화 포맷을 선택해 주세요", "확인");
             return;
         }
+#pragma warning restore CS8602
 
         var info = new OpenNotificationInfo()
         {

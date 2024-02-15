@@ -13,16 +13,17 @@ public partial class GiveawayEventListViewModel : ObservableObject
     [ObservableProperty]
     private bool isBusy;
     [ObservableProperty]
-    private string eventState;
-    public ObservableCollection<GiveawayEvent> GiveawayEvents { get; set;}
+    private string eventState = "진행중인 경품 이벤트 _개";
+    public ObservableCollection<GiveawayEvent> GiveawayEvents { get; private set; } = new ObservableCollection<GiveawayEvent>();
 
     public async Task LoadAsync()
     {
         IsBusy = true;
         var arr = await service.Event.GetGiveawayEventsAsync();
-        GiveawayEvents = new ObservableCollection<GiveawayEvent>(arr);
+        foreach (var item in arr) {
+            GiveawayEvents.Add(item);
+        }
         SetEventState(GiveawayEvents.Count);
-        OnPropertyChanged(nameof(GiveawayEvents));
         IsBusy = false;
     }
 

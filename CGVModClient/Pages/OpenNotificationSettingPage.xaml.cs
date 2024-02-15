@@ -23,8 +23,8 @@ public partial class OpenNotificationSettingPage : ContentPage
 
     private async void ListView_ItemTapped(object sender, ItemTappedEventArgs e)
     {
-        var info = e.Item as OpenNotificationInfo;
-        var result = await Application.Current.MainPage.DisplayAlert(Title, "알림을 삭제하시겠습니까?", "삭제", "취소", FlowDirection.LeftToRight);
+        var info = (OpenNotificationInfo)e.Item;
+        var result = await DisplayAlert(Title, "알림을 삭제하시겠습니까?", "삭제", "취소", FlowDirection.LeftToRight);
         if(result)
         {
             await viewModel.RemoveOpenNotificationInfo(info);

@@ -14,20 +14,18 @@ public partial class GiveawayEventDetailViewModel : ObservableObject
     [ObservableProperty]
     private string description;
 
-    private GiveawayTheaterInfo theaterInfo;
-    private GiveawayEventModel eventModel;
-
-    public ObservableCollection<Theater> Theaters { get; set; }
-
+    public ObservableCollection<Theater> Theaters { get; private set; } = new ObservableCollection<Theater>();
+    
     public async Task LoadAsync(string eventIndex)
     {
         IsBusy = true;
-        eventModel = await service.Event.GetGiveawayEventModelAsync(eventIndex);
+        var eventModel = await service.Event.GetGiveawayEventModelAsync(eventIndex);
         Title = eventModel.Title;
         Description = eventModel.Contents;
-        theaterInfo = await service.Event.GetGiveawayTheaterInfoAsync(eventModel.GiveawayIndex);
-        Theaters = new ObservableCollection<Theater>(theaterInfo.TheaterList);
-        OnPropertyChanged(nameof(Theaters));
+        var theaterInfo = await service.Event.GetGiveawayTheaterInfoAsync(eventModel.GiveawayIndex);
+        foreach(var item in theaterInfo.TheaterList) {
+            Theaters.Add(item);
+        }
         IsBusy = false;
     }
 }
