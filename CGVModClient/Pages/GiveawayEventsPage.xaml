@@ -4,8 +4,8 @@
              xmlns:cgv="clr-namespace:CGVModClient"
              xmlns:cgv_viewmodels="clr-namespace:CGVModClient.ViewModels"
              xmlns:cgv_data="clr-namespace:CGVModClient.Data"
-             x:Class="CGVModClient.Pages.GiveawayEventListPage"
-             x:DataType="cgv_viewmodels:GiveawayEventListViewModel"
+             x:Class="CGVModClient.Pages.GiveawayEventsPage"
+             x:DataType="cgv_viewmodels:GiveawayEventsViewModel"
              Loaded="ContentPage_Loaded"
              Title="경품 이벤트 현황">
     <ContentPage.Resources>

@@ -9,7 +9,7 @@ public partial class MainPage : ContentPage
 
     private async void GoGiveawayEventListPageButton_Clicked(object sender, EventArgs e)
     {
-        await Shell.Current.GoToAsync(Constants.PageRoutes[typeof(GiveawayEventListPage)]);
+        await Shell.Current.GoToAsync(Constants.PageRoutes[typeof(GiveawayEventsPage)]);
     }
 
     private async void GoOpenNotificationButton_Clicked(object sender, EventArgs e)

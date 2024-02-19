@@ -74,6 +74,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Compile Update="Pages\GiveawayEventsPage.xaml.cs">
+	    <DependentUpon>GiveawayEventsPage.xaml</DependentUpon>
+	  </Compile>
 	  <Compile Update="Pages\OpenNotificationAddPage.xaml.cs">
 	    <DependentUpon>OpenNotificationAddPage.xaml</DependentUpon>
 	  </Compile>
@@ -92,7 +95,7 @@
 	  <MauiXaml Update="Pages\GiveawayEventDetailPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Pages\GiveawayEventListPage.xaml">
+	  <MauiXaml Update="Pages\GiveawayEventsPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Pages\MainPage.xaml">

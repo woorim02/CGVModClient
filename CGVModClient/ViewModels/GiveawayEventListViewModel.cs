@@ -7,7 +7,7 @@ using System.Runtime.CompilerServices;
 
 namespace CGVModClient.ViewModels;
 
-public partial class GiveawayEventListViewModel : ObservableObject
+public partial class GiveawayEventsViewModel : ObservableObject
 {
     CgvService service = new CgvService();
     [ObservableProperty]

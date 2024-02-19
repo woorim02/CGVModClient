@@ -1,13 +1,13 @@
 namespace CGVModClient.Pages;
 
-public partial class GiveawayEventListPage : ContentPage
+public partial class GiveawayEventsPage : ContentPage
 {
-    GiveawayEventListViewModel viewModel;
+    GiveawayEventsViewModel viewModel;
 
-    public GiveawayEventListPage()
+    public GiveawayEventsPage()
 	{
 		InitializeComponent();
-		viewModel = new GiveawayEventListViewModel();
+		viewModel = new GiveawayEventsViewModel();
         BindingContext = viewModel;
 	}
 

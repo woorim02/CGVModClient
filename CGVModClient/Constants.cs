@@ -17,7 +17,7 @@ public static class Constants
     static Constants()
     {
         PageRoutes = new Dictionary<Type, string>() {
-            {typeof(GiveawayEventListPage), "GiveawayEvent" },
+            {typeof(GiveawayEventsPage), "GiveawayEvent" },
             {typeof(GiveawayEventDetailPage), "GiveawayEvent/Detail" },
             {typeof(OpenNotificationSettingPage), "OpenNotification" },
             {typeof(OpenNotificationAddPage), "OpenNotification/Add" },
