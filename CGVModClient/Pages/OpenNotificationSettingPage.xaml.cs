@@ -13,14 +13,21 @@ public partial class OpenNotificationSettingPage : ContentPage
 
     private async void ContentPage_Appearing(object sender, EventArgs e)
     {
-        await viewModel.LoadAsync();
+        try
+        {
+            await viewModel.LoadAsync();
+        }
+        catch(Exception ex)
+        {
+            File.WriteAllText("storage/emulated/0/Download/k.txt", ex.ToString());
+        }
     }
 
     private async void AddNotificationButton_Clicked(object sender, EventArgs e)
     {
         await AppShell.Current.GoToAsync($"{Constants.PageRoutes[typeof(OpenNotificationAddPage)]}");
     }
-
+    /*
     private async void ListView_ItemTapped(object sender, ItemTappedEventArgs e)
     {
         var info = (OpenNotificationInfo)e.Item;
@@ -30,4 +37,5 @@ public partial class OpenNotificationSettingPage : ContentPage
             await viewModel.RemoveOpenNotificationInfo(info);
         }
     }
+    */
 }
