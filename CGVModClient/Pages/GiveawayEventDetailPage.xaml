@@ -23,14 +23,27 @@
             <Setter Property="TextColor" Value="LightGrey"/>
         </Style>
     </ContentPage.Resources>
-    <Grid RowDefinitions="40,*">
-        <ActivityIndicator Grid.Row="1" IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}"
+    <Grid RowDefinitions="40, 47, *">
+        <ActivityIndicator Grid.Row="2" IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}"
                            HeightRequest="40" WidthRequest="40" Margin="3"
                            VerticalOptions="Start"/>
         <Border Grid.Row="0" Style="{StaticResource MyBorder}">
             <Label Text="{Binding Title}" VerticalOptions="Center"/>
         </Border>
-        <ListView Grid.Row="1"
+        <ScrollView Grid.Row="1" Margin="5"
+                    Orientation="Horizontal" HorizontalScrollBarVisibility="Never">
+            <HorizontalStackLayout Spacing="5" BindableLayout.ItemsSource="{Binding Areas}">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate x:DataType="cgv_data:Area">
+                        <Button Padding="0" Text="{Binding AreaName}" WidthRequest="80"
+                                Command="{Binding Path=SelectAreaCommand, Source={RelativeSource AncestorType={x:Type cgv_viewmodels:GiveawayEventDetailViewModel}}}"
+                                CommandParameter="{Binding AreaCode}">
+                        </Button>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </HorizontalStackLayout>
+        </ScrollView>
+        <ListView Grid.Row="2"
                   x:Name="TheatersListView"
                   CachingStrategy="RecycleElementAndDataTemplate"
                   ItemsSource="{Binding Theaters}"
