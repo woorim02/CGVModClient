@@ -39,7 +39,7 @@ namespace CGVModClient.ViewModels
         {
 #if ANDROID
             if (intent == null)
-                intent = new Android.Content.Intent(Android.App.Application.Context, typeof(MyForegroundService));
+                intent = new Android.Content.Intent(Android.App.Application.Context, typeof(OpenNotificationForegroundService));
             if (!IsRunning){
                 Android.App.Application.Context.StartForegroundService(intent);
                 IsRunning = true;
@@ -58,7 +58,7 @@ namespace CGVModClient.ViewModels
             var services = manager.GetRunningServices(int.MaxValue);
             foreach (var service in services)
             {
-                if (service.Service.ClassName.Contains(nameof(MyForegroundService)))
+                if (service.Service.ClassName.Contains(nameof(OpenNotificationForegroundService)))
                 {
                     IsRunning = true;
                     return;

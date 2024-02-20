@@ -45,7 +45,7 @@ namespace CGVModClient.Database
         public async Task SaveOpenNotificationInfoAsync(OpenNotificationInfo info)
         {
             await Init();
-            await database.InsertAsync(info);
+            await database.InsertOrReplaceAsync(info);
             if (info.Movie != null)
                 await database.InsertOrReplaceAsync(info.Movie);
             await database.InsertOrReplaceAsync(info.Theater);

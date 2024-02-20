@@ -34,7 +34,7 @@ public partial class OpenNotificationSettingViewModel : ObservableObject, IViewM
         var services = manager.GetRunningServices(int.MaxValue);
         foreach (var service in services)
         {
-            if (service.Service.ClassName.Contains(nameof(MyForegroundService)))
+            if (service.Service.ClassName.Contains(nameof(OpenNotificationForegroundService)))
             {
                 IsOpenNotificationEnabled = true;
                 break;

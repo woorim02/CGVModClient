@@ -21,4 +21,8 @@ public class OpenNotificationInfo
     public Theater Theater { get; set; }
 
     public DateTime TargetDate { get; set; }
+
+    public bool IsOpen { get; set; } = false;
+    private bool canReservation = false;
+    public bool CanReservation { get => IsOpen && canReservation; set => canReservation = value; }
 }
