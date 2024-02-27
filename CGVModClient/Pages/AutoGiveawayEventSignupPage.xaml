@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:cgv_viewmodel="clr-namespace:CGVModClient.ViewModels"
+             x:Class="CGVModClient.Pages.AutoGiveawayEventSignupPage"
+             x:DataType="cgv_viewmodel:AutoGiveawayEventSignupViewModel"
+             Title="선착순 경품 지급">
+    <Grid RowDefinitions="40,80,40,40,1*,50" Padding="5" Margin="5">
+        <Label Grid.Row="0" 
+            Text="선착순 경품 지급 발행 정보"
+               VerticalOptions="Center"/>
+        <ListView Grid.Row="1" VerticalOptions="Start" MaximumHeightRequest="80">
+            <ListView.Header>
+                <Button Text="신청할 경품 추가" HeightRequest="20" WidthRequest="50"/>
+            </ListView.Header>
+        </ListView>
+        <Entry Grid.Row="2" Text="{Binding ReservationNumber}" Placeholder="예매번호(15자리) 또는 판매번호(16자리) 입력"/>
+        <Entry Grid.Row="3" Text="{Binding PhoneNumber}" Placeholder="번호표를 받을 연락처 입력"/>
+        <ScrollView Grid.Row="4" VerticalOptions="FillAndExpand">
+            <Label Text="{Binding ProgressText}"/>
+        </ScrollView>
+        <Button Grid.Row="5" Text="자동 선착순 경품 신청" Command="{Binding SignupCommand}"/>
+    </Grid>
+</ContentPage>

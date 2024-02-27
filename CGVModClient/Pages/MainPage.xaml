@@ -10,5 +10,8 @@
         <Button x:Name="GoOpenNotificationButton"
                 Text="영화 예매 오픈 알림"
                 Clicked="GoOpenNotificationButton_Clicked"/>
+        <Button x:Name="GoAutoGiveawaySignupPageButton"
+                Text="자동 선착순 경품 신청"
+                Clicked="GoAutoGiveawaySignupPageButton_Clicked"/>
     </VerticalStackLayout>
 </ContentPage>
