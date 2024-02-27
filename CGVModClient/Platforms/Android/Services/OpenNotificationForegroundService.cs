@@ -9,41 +9,29 @@ namespace CGVModClient.Platforms.Android.Services;
 public class OpenNotificationForegroundService : Service
 {
     #region Fields
-    private string Foreground_Title = "예매 오픈 알림";
-    private string Foreground_CHANNEL_ID = "1000";
-    private int Foreground_ID = 0;
-    private string Foreground_CHANNEL_NAME = "notification";
+    private string FOREGROUND_TITLE = "예매 오픈 알림";
+    private int FOREGROUND_NOTIFICATION_ID = 0;
+    private int OPEN_NOTIFICATION_ID = 0;
 
-    private string OPEN_CHANNEL_ID = "2000";
-    private int OPEN_ID = 0;
-    private string OPEN_CHANNEL_NAME = "open_notification";
-
-    private string OPEN_GROUP_KEY = "OPEN_GROUP_KEY";
-    private string OPEN_GROUP_NAME = "OPEN_GROUP_NAME";
-
+    private CgvService _service = new CgvService();
+    private AppDatabase _database = new AppDatabase();
     private CancellationTokenSource _cts;
     private bool _isRunning;
-    private CgvService _service;
-    private AppDatabase _database;
     #endregion
 
     #region Override Methods
     public override StartCommandResult OnStartCommand(Intent? intent, StartCommandFlags flags, int startId)
     {
-        CreateForegroundNotificationChannel();
-        var notification = new NotificationCompat.Builder(this, Foreground_CHANNEL_ID)
+        var notification = new NotificationCompat.Builder(this, Constants.FOREGROUND_CHANNEL_ID)
             .SetAutoCancel(false)
             .SetOngoing(true)
             .SetSmallIcon(Resource.Mipmap.appicon)
-            .SetContentTitle(Foreground_Title)
+            .SetContentTitle(FOREGROUND_TITLE)
             .SetContentText("용아맥 오픈 확인중");
-        StartForeground(Foreground_ID, notification.Build());
-        CreateOpenNotificationChannel();
+        StartForeground(FOREGROUND_NOTIFICATION_ID, notification.Build());
 
         _cts = new CancellationTokenSource();
         _isRunning = true;
-        _service = new CgvService();
-        _database = new AppDatabase();
 
         Task.Run(async () => {
             while (_isRunning && !_cts.IsCancellationRequested)
@@ -133,53 +121,35 @@ public class OpenNotificationForegroundService : Service
     }
 
     #region Notification Methods
-    private void CreateForegroundNotificationChannel()
-    {
-        var notificationManager = NotificationManagerCompat.From(this);
-
-        var channel = new NotificationChannel(Foreground_CHANNEL_ID, Foreground_CHANNEL_NAME, NotificationImportance.Low);
-
-        notificationManager.CreateNotificationChannel(channel);
-    }
-
-    private void CreateOpenNotificationChannel()
-    {
-        var notificationManager = NotificationManagerCompat.From(ApplicationContext);
-
-        var channel = new NotificationChannel(OPEN_CHANNEL_ID, OPEN_CHANNEL_NAME, NotificationImportance.High);
-
-        notificationManager.CreateNotificationChannel(channel);
-        notificationManager.CreateNotificationChannelGroup(new NotificationChannelGroup(OPEN_GROUP_KEY, OPEN_GROUP_NAME));
-    }
 
     private void SetForegroundNotificationMessage(string message)
     {
-        var notification = new NotificationCompat.Builder(this, Foreground_CHANNEL_ID)
+        var notification = new NotificationCompat.Builder(this, Constants.FOREGROUND_CHANNEL_ID)
             .SetAutoCancel(false)
             .SetOngoing(true)
             .SetSmallIcon(Resource.Mipmap.appicon)
-            .SetContentTitle(Foreground_Title)
+            .SetContentTitle(FOREGROUND_TITLE)
             .SetContentText(message);
         var notificationManager = NotificationManagerCompat.From(this);
-        notificationManager.Notify(Foreground_ID, notification.Build());
+        notificationManager.Notify(FOREGROUND_NOTIFICATION_ID, notification.Build());
     }
 
     private void SendOpenNotification(string title, string message)
     {
         var notificationManager = NotificationManagerCompat.From(this);
 
-        var notification = new NotificationCompat.Builder(this, OPEN_CHANNEL_ID)
+        var notification = new NotificationCompat.Builder(this, Constants.OPEN_CHANNEL_ID)
             .SetSmallIcon(Resource.Mipmap.appicon)
             .SetContentTitle(title)
             .SetContentText(message)
-            .SetGroup(OPEN_GROUP_KEY);
+            .SetGroup(Constants.OPEN_GROUP_KEY);
 
-        var groupNoti = new NotificationCompat.Builder(this, OPEN_CHANNEL_ID)
+        var groupNoti = new NotificationCompat.Builder(this, Constants.OPEN_CHANNEL_ID)
             .SetSmallIcon(Resource.Mipmap.appicon)
-            .SetGroup(OPEN_GROUP_KEY)
+            .SetGroup(Constants.OPEN_GROUP_KEY)
             .SetGroupSummary(true);
 
-        notificationManager.Notify(OPEN_ID++, notification.Build());
+        notificationManager.Notify(OPEN_NOTIFICATION_ID++, notification.Build());
         notificationManager.Notify(0, groupNoti.Build());
     }
     #endregion
