@@ -22,10 +22,12 @@ public static class Constants
     static Constants()
     {
         PageRoutes = new Dictionary<Type, string>() {
-            {typeof(GiveawayEventsPage), "GiveawayEvent" },
-            {typeof(GiveawayEventDetailPage), "GiveawayEvent/Detail" },
-            {typeof(OpenNotificationSettingPage), "OpenNotification" },
-            {typeof(OpenNotificationAddPage), "OpenNotification/Add" },
+            {typeof(MainPage), "Main/" },
+            {typeof(GiveawayEventsPage), "Main/GiveawayEvent" },
+            {typeof(GiveawayEventDetailPage), "Main/GiveawayEvent/Detail" },
+            {typeof(AutoGiveawayEventSignupPage), "Main/AutoGiveawayEventSignup" },
+            {typeof(OpenNotificationSettingPage), "Main/OpenNotification" },
+            {typeof(OpenNotificationAddPage), "Main/OpenNotification/Add" },
         };
     }
 }
