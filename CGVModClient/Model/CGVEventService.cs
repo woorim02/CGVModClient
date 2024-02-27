@@ -1,4 +1,5 @@
 ﻿using HtmlAgilityPack;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Text;
 
@@ -13,6 +14,7 @@ public class CgvEventService : CgvServiceBase
         _client = client;
     }
 
+    #region Get
     public async Task<GiveawayEvent[]> GetGiveawayEventsAsync()
     {
         var request = new HttpRequestMessage(HttpMethod.Post, "https://m.cgv.co.kr/Event/GiveawayEventList.aspx/GetGiveawayEventList");
@@ -81,5 +83,30 @@ public class CgvEventService : CgvServiceBase
             item.GiveawayRemainCount = Decrypt(item.EncCount);
         }
         return info;
+    }
+    #endregion
+
+    public async Task<bool> SignupGiveawayEvent(GiveawayEventModel model, Theater theater, string ticketNumber, string phoneNumber)
+    {
+        var payload = new
+        {
+            eventIdx = Uri.EscapeDataString(Encrypt(model.EventIndex)),
+            giveawayIdx = Uri.EscapeDataString(Encrypt(model.GiveawayIndex)),
+            giveawayNm = Uri.EscapeDataString(Encrypt(model.Title)),
+            ticketNum = Uri.EscapeDataString(Encrypt(ticketNumber)),
+            theaterCd = Uri.EscapeDataString(Encrypt(theater.TheaterCode)),
+            theaterNm = Uri.EscapeDataString(Encrypt(theater.TheaterName)),
+            mobileNum = Uri.EscapeDataString(Encrypt(phoneNumber)),
+            remainCnt = Uri.EscapeDataString(theater.EncCount),
+            totalCnt = Uri.EscapeDataString(theater.EncCount),
+        };
+        var request = new HttpRequestMessage(HttpMethod.Post, "https://m.cgv.co.kr/Event/GiveawayEventSignup.aspx/SignGiveawayNum");
+        request.Content = new StringContent(JsonConvert.SerializeObject(payload), Encoding.UTF8, "application/json");
+        var response = await _client.SendAsync(request);
+        var obj = JObject.Parse(await response.Content.ReadAsStringAsync());
+        var resultCd = obj["d"][0].ToString();
+        if (resultCd == "00")
+            return true;
+        return false;
     }
 }
