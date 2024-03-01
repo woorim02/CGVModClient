@@ -1,10 +1,15 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using System.Collections.ObjectModel;
 
 namespace CGVModClient.ViewModels;
 
 public partial class AutoGiveawayEventSignupViewModel : ObservableObject
 {
+    [ObservableProperty]
+    private DateTime endTime = DateTime.Now;
+    [ObservableProperty]
+    private string timerText;
     [ObservableProperty]
     private string reservationNumber;
     [ObservableProperty]
@@ -20,6 +25,5 @@ public partial class AutoGiveawayEventSignupViewModel : ObservableObject
         if (IsRunnung)
             return;
         IsRunnung = true;
-        //todo
     }
 }

@@ -4,16 +4,15 @@
              xmlns:cgv_viewmodel="clr-namespace:CGVModClient.ViewModels"
              x:Class="CGVModClient.Pages.AutoGiveawayEventSignupPage"
              x:DataType="cgv_viewmodel:AutoGiveawayEventSignupViewModel"
-             Title="선착순 경품 지급">
-    <Grid RowDefinitions="40,80,40,40,1*,50" Padding="5" Margin="5">
-        <Label Grid.Row="0" 
-            Text="선착순 경품 지급 발행 정보"
-               VerticalOptions="Center"/>
-        <ListView Grid.Row="1" VerticalOptions="Start" MaximumHeightRequest="80">
-            <ListView.Header>
-                <Button Text="신청할 경품 추가" HeightRequest="20" WidthRequest="50"/>
-            </ListView.Header>
-        </ListView>
+             Title="자동 선착순 경품 신청">
+    <Grid RowDefinitions="80,40,40,40,1*,50" Padding="5" Margin="5">
+        <Grid ColumnDefinitions="90,1*" RowDefinitions="1*,1*" Padding="0">
+            <Label Grid.Column="0" Grid.Row="0" Text="상영 종료 시간" VerticalOptions="Center"/>
+            <TimePicker Grid.Row="0" Grid.Column="1" Time="{Binding EndTime}" VerticalOptions="End"/>
+            <Label Grid.Row="1" Grid.Column="0" Text="잔여 시간" VerticalOptions="Center"/>
+            <Label Grid.Row="1" Grid.Column="1" Text="{Binding TimerText}" VerticalOptions="Center"/>
+        </Grid>
+        <Label Grid.Row="1" Text="선착순 경품 지급 발행 정보" VerticalOptions="Center"/>
         <Entry Grid.Row="2" Text="{Binding ReservationNumber}" Placeholder="예매번호(15자리) 또는 판매번호(16자리) 입력"/>
         <Entry Grid.Row="3" Text="{Binding PhoneNumber}" Placeholder="번호표를 받을 연락처 입력"/>
         <ScrollView Grid.Row="4" VerticalOptions="FillAndExpand">
